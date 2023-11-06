@@ -24,4 +24,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "ad",
+    pattern: "Ad/{action=CreateAd}",
+    defaults: new { controller = "Ad", action = "CreateAd" });
+
 app.Run();

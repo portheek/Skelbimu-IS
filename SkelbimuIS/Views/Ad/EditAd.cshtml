@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skelbimo redagavimas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Skelbimo redagavimas</h1>
+
+        <form>
+            <div class="mb-3">
+                <label for="adTitle" class="form-label">Skelbimo pavadinimas</label>
+                <input type="text" class="form-control" id="adTitle" value="" >
+            </div>
+            <div class="mb-3">
+                <label for="adDescription" class="form-label">Skelbimo aprašymas</label>
+                <textarea class="form-control" id="adDescription" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Kategorija</label>
+                <select class="form-select" id="category" required>
+                    <option value="" disabled selected>Pasirinkite kategoriją</option>
+                    <option value="electronics">Įrenginiai</option>
+                    <option value="clothing">Rūbai</option>
+                    <option value="furniture">Baldai</option>
+                    <option value="books">Knygos</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Kaina</label>
+                <input type="number" class="form-control" id="price" placeholder="Įvesti kainą" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Išsaugoti pakeitimus</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
