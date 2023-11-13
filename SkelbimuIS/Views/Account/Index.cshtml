@@ -1,1 +1,31 @@
-﻿
+﻿<div class="row">
+    <div class="col-md-6 offset-md-3 ">
+        <h2 class="display-5 mt-3 text-secondary">Vardenis Pavardenis</h2>
+        <button type="button" class="btn btn-outline-danger mt-1">Atsijungti</button>  
+        
+        <div class="list-group mt-4">
+            <h4>Skelbimai</h4>
+
+            <a class="btn list-group-item list-group-item-action" asp-controller="Home" asp-action="Index">
+                Mano skelbimai
+            </a>
+            <a class="btn list-group-item list-group-item-action" asp-controller="Home" asp-action="Index">
+                Išsaugoti skelbimai
+            </a>
+
+        </div>
+
+        <div class="list-group mt-4">
+            <h4>Paskyra</h4>
+            <a class="btn list-group-item list-group-item-action" asp-controller="Account" asp-action="EditAccount">
+                Vartotojo profilio redagavimas
+            </a>
+            <a class="btn list-group-item list-group-item-action" asp-controller="Account" asp-action="ChangePassword">
+                Slaptažodžio keitimas
+            </a>
+            <a class="btn list-group-item list-group-item-action" asp-controller="Account" asp-action="DeleteAccount">
+                Paskyros ištrynimas
+            </a>
+        </div>
+    </div>
+</div>
