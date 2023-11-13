@@ -38,13 +38,13 @@
                         <p class="card-text"><strong>Kaina:</strong> 15.15</p>
 
                        
-                        <button id="openAd" class='btn btn-primary'>Atidaryti</button> 
+                        <a class="btn btn-primary" role="button" id="openAd" asp-controller="Ad" asp-action="ViewAd">Atidaryti</a> 
                         <button class='btn btn-danger'>Ištrinti</button> 
                         <button class='btn btn-warning'>Pridėti į mėgstamus</button>
                         <button class='btn btn-success'>Įvertinti</button>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card mt-2">
                     <div class="card-body">
                         <h5 class="card-title">Pavadinimas</h5>
                         <p class="card-text">Aprasymas</p>
@@ -57,7 +57,7 @@
                         <button class='btn btn-success'>Įvertinti</button>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card mt-2">
                     <div class="card-body">
                         <h5 class="card-title">Pavadinimas</h5>
                         <p class="card-text">Aprasymas</p>
@@ -75,15 +75,5 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Get the button element by its ID
-        var viewDetailsButton = document.getElementById("openAd");
-
-        // Add a click event listener to the button
-        viewDetailsButton.addEventListener("click", function() {
-            // Navigate to the ad details page when the button is clicked
-            window.location.href = "../Ad/ViewAd.cshtml"; // Replace "/ad-details" with the actual URL of the ad details page
-        });
-    </script>
 </body>
 </html>
