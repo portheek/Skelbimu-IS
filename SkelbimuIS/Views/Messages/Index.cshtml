@@ -1,12 +1,19 @@
-﻿<h1 class="display-5">Žinučių kambarys</h1>
+﻿@model List<SkelbimuIS.Models.Message>
+
+<h1 class="display-5">Žinučių kambarys</h1>
 
 <h3 class="mt-2">Gautos žinutės:</h3>
 <div class="list-group">
-    <a class="btn list-group-item list-group-item-action" asp-controller="Messages" asp-action="ViewMessage">
-        <strong>Dėl skelbimo kainos</strong>
-        <div style="display: inline;">Petras G. 2023-11-01 15:24</div>
-        <span class="badge bg-success">Naujas</span>
-    </a>
+        
+        @foreach (var message in Model)
+        {
+            <a class="btn list-group-item list-group-item-action" asp-controller="Messages" asp-action="ViewMessage" asp-route-username="@message.fromUsername">
+                <strong>@message.topic</strong>
+                <div style="display: inline;">@message.fromUsername @message.date</div>
+                <span class="badge bg-success">Naujas</span>
+            </a>
+        }
+        
 </div>
 <nav class="mt-2" aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
