@@ -6,6 +6,7 @@ namespace SkelbimuIS.Controllers
 {
     public class AuthController : Controller
     {
+        private DataBaseModel database = new DataBaseModel();
         private readonly ILogger<AuthController> _logger;
 
         public AuthController(ILogger<AuthController> logger)
@@ -18,8 +19,38 @@ namespace SkelbimuIS.Controllers
             return View();
         }
 
-        public IActionResult Register()
+        [HttpGet]
+        public ActionResult Register()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Register(string username, string password, string confirmpassword, string email)
+        {
+            Console.WriteLine("here");
+
+            if (password != confirmpassword)
+            {
+                ViewBag.ErrorMessage = "Slaptažodžiai nesutampa!";
+                return View();
+            }
+
+            if (database.userExists(username))
+            {
+                ViewBag.ErrorMessage = "Vartotojas su tokiu slapyvardžiu jau egzistuoja!";
+                return View();
+            }
+
+            User user = new User
+            {
+                username = username,
+                password = password,
+                email = email,
+                role = "user"
+            };
+
+            database.addUser(user);
             return View();
         }
 

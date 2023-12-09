@@ -7,6 +7,8 @@ namespace SkelbimuIS.Controllers
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
+        private DataBaseModel database = new DataBaseModel();
+
 
         public AccountController(ILogger<AccountController> logger)
         {
@@ -33,6 +35,10 @@ namespace SkelbimuIS.Controllers
             return View();
         }
 
+        
+
+        
+        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
