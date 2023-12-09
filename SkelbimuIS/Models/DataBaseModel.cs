@@ -26,15 +26,16 @@ namespace SkelbimuIS.Models
                 {
                     while (reader.Read())
                     {
-                        Message message = new Message();
-
-                        message.id = reader.GetInt32(0);
-                        message.fromUsername = reader.GetString(1);
-                        message.toUsername = reader.GetString(2);
-                        message.topic = reader.GetString(3);
-                        message.content = reader.GetString(4);
-                        message.reaction = reader.GetInt32(5);
-                        message.date = reader.GetDateTime(6);
+                        Message message = new Message
+                        {
+                            id = reader.GetInt32(0),
+                            fromUsername = reader.GetString(1),
+                            toUsername = reader.GetString(2),
+                            topic = reader.GetString(3),
+                            content = reader.GetString(4),
+                            reaction = reader.GetInt32(5),
+                            date = reader.GetDateTime(6)
+                        };
 
                         messages.Add(message);
                     }
@@ -43,7 +44,8 @@ namespace SkelbimuIS.Models
             return messages;
         }
 
-        public User getUserById(int id){
+        public User getUserById(int id)
+        {
             
             string sqlQuery = $"SELECT * FROM users WHERE id={id}";
             
@@ -53,12 +55,13 @@ namespace SkelbimuIS.Models
                 {
                     while (reader.Read())
                     {
-                        User user = new User();
-
-                        user.id = reader.GetInt32(0);
-                        user.username = reader.GetString(1);
-                        user.email = reader.GetString(2);
-                        user.role = reader.GetString(4);
+                        User user = new User
+                        {
+                            id = reader.GetInt32(0),
+                            username = reader.GetString(1),
+                            email = reader.GetString(2),
+                            role = reader.GetString(4)
+                        };
 
                         return user;
                     }
@@ -67,7 +70,8 @@ namespace SkelbimuIS.Models
             return null;
         }
         
-        public List<Message> getAllUserMessages(string username){
+        public List<Message> getAllUserMessages(string username)
+        {
                                                             // AND ReceiverID = @User2                    //AND ReceiverID = @User1
             string sqlQuery = $"SELECT * FROM messages WHERE (fromUsername = '{username}') OR (toUsername = '{username}') ORDER BY date;";
             List<Message> messages = new List<Message>();
@@ -78,21 +82,62 @@ namespace SkelbimuIS.Models
                 {
                     while (reader.Read())
                     {
-                        Message message = new Message();
-
-                        message.id = reader.GetInt32(0);
-                        message.fromUsername = reader.GetString(1);
-                        message.toUsername = reader.GetString(2);
-                        message.topic = reader.GetString(3);
-                        message.content = reader.GetString(4);
-                        message.reaction = reader.GetInt32(5);
-                        message.date = reader.GetDateTime(6);
+                        Message message = new Message
+                        {
+                            id = reader.GetInt32(0),
+                            fromUsername = reader.GetString(1),
+                            toUsername = reader.GetString(2),
+                            topic = reader.GetString(3),
+                            content = reader.GetString(4),
+                            reaction = reader.GetInt32(5),
+                            date = reader.GetDateTime(6)
+                        };
 
                         messages.Add(message);
                     }
                 }
             }
             return messages;  
+        }
+
+        public void addUser(User user)
+        {
+            string username = user.username;
+            string password = user.HashPassword();
+            string email = user.email;
+            string role = user.role;
+
+            Console.WriteLine(username);
+
+            string sqlQuery = $"INSERT INTO users (username, email, password, role) VALUES ('{username}', '{email}', '{password}', '{role}');";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("username", username);
+                command.Parameters.AddWithValue("email", email);
+                command.Parameters.AddWithValue("password", password);
+                command.Parameters.AddWithValue("role", role);
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public bool userExists(string username){
+
+            string sqlQuery = $"SELECT * FROM users WHERE username = '{username}'";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("username", username);
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        return true;
+                    }  
+                    return false;
+                }
+            }
         }
     }
 }
