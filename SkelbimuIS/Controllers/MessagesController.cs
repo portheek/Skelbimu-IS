@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using SkelbimuIS.Models;
+﻿using SkelbimuIS.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using MySqlConnector;
+using System.Text.Json;
 
 
 namespace SkelbimuIS.Controllers
@@ -10,23 +9,30 @@ namespace SkelbimuIS.Controllers
     public class MessagesController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private DataBaseModel database = new DataBaseModel();
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private DataBaseModel database;
+        private readonly User currentUser;
 
-
-        public MessagesController(ILogger<HomeController> logger)
+        public MessagesController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+            database = new DataBaseModel(_httpContextAccessor);
+
+            var serializedUserObject = _httpContextAccessor.HttpContext.Session.GetString("UserObject");
+            currentUser = JsonSerializer.Deserialize<User>(serializedUserObject);
+
         }
 
         public IActionResult Index()
         {
-            List<Message> messages = database.getAllMessages();
+            List<string> messages = database.getAllUserContacts(currentUser.username);
             return View(messages);
         }
 
-        public IActionResult ViewMessage(string username)
+        public IActionResult ViewMessages(string contactUsername)
         {
-            List<Message> messages = database.getAllUserMessages(username);
+            List<Message> messages = database.getCommonMessages(currentUser.username, contactUsername);
             return View(messages);
         }
 

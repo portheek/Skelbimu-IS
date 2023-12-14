@@ -1,15 +1,14 @@
-﻿@model List<SkelbimuIS.Models.Message>
+﻿@model List<string>
 
 <h1 class="display-5">Žinučių kambarys</h1>
 
-<h3 class="mt-2">Gautos žinutės:</h3>
+<h3 class="mt-2">Jūsų kontaktai:</h3>
 <div class="list-group">
         
-        @foreach (var message in Model)
+        @foreach (var name in Model)
         {
-            <a class="btn list-group-item list-group-item-action" asp-controller="Messages" asp-action="ViewMessage" asp-route-username="@message.fromUsername">
-                <strong>@message.topic</strong>
-                <div style="display: inline;">@message.fromUsername @message.date</div>
+            <a class="btn list-group-item list-group-item-action" asp-controller="Messages" asp-action="ViewMessages" asp-route-contactUsername="@name">
+                <strong>@name</strong>
                 <span class="badge bg-success">Naujas</span>
             </a>
         }

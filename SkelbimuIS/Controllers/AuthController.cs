@@ -1,22 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SkelbimuIS.Models;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace SkelbimuIS.Controllers
 {
     public class AuthController : Controller
     {
-        private DataBaseModel database = new DataBaseModel();
+        private DataBaseModel database;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<AuthController> _logger;
 
-        public AuthController(ILogger<AuthController> logger)
+        public AuthController(ILogger<AuthController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+            database = new DataBaseModel(_httpContextAccessor);
+
         }
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(string email, string password)
+        {
+
+            User user = database.getUser(email, password);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = "Tokio vartotojo nėra!";
+                return View("Index");
+            }
+
+            SetSessionUser(user);
+
+            return View("Index");
         }
 
         [HttpGet]
@@ -28,7 +49,11 @@ namespace SkelbimuIS.Controllers
         [HttpPost]
         public IActionResult Register(string username, string password, string confirmpassword, string email)
         {
-            Console.WriteLine("here");
+
+            if (username == "" ||  password == "" || confirmpassword == "" || email == ""){
+                ViewBag.ErrorMessage = "Forma nebaigta pildyti!";
+                return View();
+            }
 
             if (password != confirmpassword)
             {
@@ -36,9 +61,15 @@ namespace SkelbimuIS.Controllers
                 return View();
             }
 
-            if (database.userExists(username))
+            if (database.userExists("username", username))
             {
                 ViewBag.ErrorMessage = "Vartotojas su tokiu slapyvardžiu jau egzistuoja!";
+                return View();
+            }
+
+            if (database.userExists("email", email))
+            {
+                ViewBag.ErrorMessage = "Vartotojas su tokiu el. paštu jau egzistuoja!";
                 return View();
             }
 
@@ -53,6 +84,32 @@ namespace SkelbimuIS.Controllers
             database.addUser(user);
             return View();
         }
+        
+        //role, username
+        public IActionResult SetSessionUser(User user)
+        {
+
+            // Serialize and store the object in session
+            var serializedUserObject = JsonSerializer.Serialize(user);
+            _httpContextAccessor.HttpContext.Session.SetString("UserObject", serializedUserObject);
+
+            return new OkResult();
+        }
+
+        public IActionResult GetUserObject()
+        {
+            var serializedUserObject = _httpContextAccessor.HttpContext.Session.GetString("UserObject");
+
+            if (serializedUserObject != null)
+            {
+                var userObject = JsonSerializer.Deserialize<User>(serializedUserObject);
+
+                return new OkObjectResult(userObject);
+            }
+
+            return new NotFoundResult();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
