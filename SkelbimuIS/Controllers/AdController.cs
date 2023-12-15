@@ -1,16 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using SkelbimuIS.Models;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace SkelbimuIS.Controllers
 {
     public class AdController : Controller
     {
         private readonly ILogger<AdController> _logger;
-
-        public AdController(ILogger<AdController> logger)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly User currentUser;
+        public AdController(ILogger<AdController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+
+            var serializedUserObject = _httpContextAccessor.HttpContext.Session.GetString("UserObject");
+            
+            if (serializedUserObject == null){
+                currentUser = null;
+            }
+            else currentUser = JsonSerializer.Deserialize<User>(serializedUserObject);
         }
 
         public IActionResult Index()
@@ -20,6 +30,11 @@ namespace SkelbimuIS.Controllers
 
         public IActionResult CreateAd()
         {
+            if (currentUser == null){
+                ViewBag.ErrorMessage = "Jūs neprisijungęs!";
+                return View();
+            }
+            
             return View();
         }
 

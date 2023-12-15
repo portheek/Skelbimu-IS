@@ -1,5 +1,18 @@
 ﻿@model List<string>
 
+@{
+    ViewBag.Title = "Register";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
+else{
+
+
 <h1 class="display-5">Žinučių kambarys</h1>
 
 <h3 class="mt-2">Jūsų kontaktai:</h3>
@@ -23,3 +36,4 @@
 </nav>
 
 <a class="btn btn-primary" asp-controller="Messages" asp-action="NewMessage">Siųsti naują žinutę</a>
+}

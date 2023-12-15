@@ -20,12 +20,19 @@ namespace SkelbimuIS.Controllers
             database = new DataBaseModel(_httpContextAccessor);
 
             var serializedUserObject = _httpContextAccessor.HttpContext.Session.GetString("UserObject");
-            currentUser = JsonSerializer.Deserialize<User>(serializedUserObject);
-
+            if (serializedUserObject == null){
+                currentUser = null;
+            }
+            else currentUser = JsonSerializer.Deserialize<User>(serializedUserObject);
         }
 
         public IActionResult Index()
         {
+            
+            if (currentUser == null){
+                ViewBag.ErrorMessage = "Jūs neprisijungęs!";
+                return View(null);
+            }
             List<string> messages = database.getAllUserContacts(currentUser.username);
             return View(messages);
         }
