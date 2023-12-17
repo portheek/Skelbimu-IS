@@ -109,6 +109,17 @@ namespace SkelbimuIS.Models
             return messages;  
         }
 
+        public void updateMessageReaction(int score, int messageId)
+        {   
+            string sqlQuery = "UPDATE messages SET reaction=reaction+@score WHERE id=@id";
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {   
+                command.Parameters.AddWithValue("@id", messageId);
+                command.Parameters.AddWithValue("@score", score);
+                command.ExecuteNonQuery();
+            }
+        }
+
         public List<string> getAllUserContacts(string username)
         {
                                                                        
@@ -198,6 +209,16 @@ namespace SkelbimuIS.Models
                 command.Parameters.AddWithValue("@content", content);
                 command.Parameters.AddWithValue("@reaction", reaction);
                 command.Parameters.AddWithValue("@date", date);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void deleteMessage(int id)
+        {
+            string sqlQuery = "DELETE FROM messages WHERE id=@id";
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
                 command.ExecuteNonQuery();
             }
         }

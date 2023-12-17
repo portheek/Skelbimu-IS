@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components.Web;
+using System.Data.Common;
 
 
 namespace SkelbimuIS.Controllers
@@ -50,6 +51,16 @@ namespace SkelbimuIS.Controllers
             return View();
         }
 
+        public void DeleteMessage(int id)
+        {
+            database.deleteMessage(id);
+        }
+        
+        public void SendReaction(int score, int messageId)
+        {
+            database.updateMessageReaction(score, messageId);
+        }
+
         [HttpPost]
         public IActionResult SendMessage(string toUsername, string topic, string message)
         {
@@ -83,7 +94,7 @@ namespace SkelbimuIS.Controllers
             database.addMessage(newMessage);
             
             ViewBag.SuccessMessage = "Žinutė išsiųsta!";
-            return ViewMessages(toUsername);
+            return ViewMessages(newMessage.toUsername);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
