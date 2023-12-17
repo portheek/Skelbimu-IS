@@ -1,16 +1,33 @@
-﻿<h1 class="display-5">Nauja žinutė</h1>
-<form>
+﻿@{
+    ViewBag.Title = "NewMessage";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
+<h1 class="display-5">Nauja žinutė</h1>
+<form asp-controller="Messages" asp-action="SendMessage" method="post" class="needs-validation" novalidate="" autocomplete="off">
     <div class="mt-3">
-        <label for="title" class="form-label">Gavėjas</label>
-        <input type="text" class="form-control" id="title" placeholder="Įveskite gavėjo vardą" required>
+        <label for="toUsername" class="form-label">Gavėjas</label>
+        <input type="text" class="form-control" id="toUsername" name="toUsername" placeholder="Įveskite gavėjo vardą" required>
     </div>
     <div class="mt-3">
-        <label for="description" class="form-label">Tema</label>
-        <input type="text" class="form-control" id="title" placeholder="Įveskite temos pavadinimą" required>
+        <label for="topic" class="form-label">Tema</label>
+        <input type="text" class="form-control" id="topic" name="topic" placeholder="Įveskite temos pavadinimą" required>
     </div>
     <div class="mt-3">
-        <label for="description" class="form-label">Žinutė</label>
-        <textarea class="form-control" id="description" rows="3" placeholder="Įveskite žinutę"
+        <label for="message" class="form-label">Žinutė</label>
+        <textarea class="form-control" id="message" name="message" rows="3" placeholder="Įveskite žinutę"
             required></textarea>
     </div>
     <button type="submit" class="btn btn-primary mt-3">Siųsti žinutę</button>

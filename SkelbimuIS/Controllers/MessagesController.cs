@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
+using Microsoft.AspNetCore.Components.Web;
 
 
 namespace SkelbimuIS.Controllers
@@ -40,12 +41,49 @@ namespace SkelbimuIS.Controllers
         public IActionResult ViewMessages(string contactUsername)
         {
             List<Message> messages = database.getCommonMessages(currentUser.username, contactUsername);
-            return View(messages);
+            var model = new Tuple<List<Message>, User>(messages, currentUser);
+            return View("ViewMessages", model);
         }
 
         public IActionResult NewMessage()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult SendMessage(string toUsername, string topic, string message)
+        {
+            if(toUsername == "" || topic == "" || message == "")
+            {
+                ViewBag.ErrorMessage = "Užpildti ne visi laukai!";
+                return View("NewMessage");
+            }
+
+            if(!database.userExists("username", toUsername) && toUsername != "")
+            {
+                ViewBag.ErrorMessage = "Toks vartotojas neegzistuoja!";
+                return View("NewMessage");
+            }
+            
+            if(currentUser.username == toUsername)
+            {
+                ViewBag.ErrorMessage = "Negalima siųsti žinutės sau!";
+                return View("NewMessage");
+            }
+            
+            Message newMessage = new Message()
+            {
+                fromUsername = currentUser.username,
+                toUsername = toUsername,
+                topic = topic,
+                content = message,
+                reaction = 0,
+                date = DateTime.Now
+            };
+            database.addMessage(newMessage);
+            
+            ViewBag.SuccessMessage = "Žinutė išsiųsta!";
+            return ViewMessages(toUsername);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
