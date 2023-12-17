@@ -1,6 +1,6 @@
-﻿@model List<SkelbimuIS.Models.Message>
+﻿@model Tuple<List<SkelbimuIS.Models.Message>, SkelbimuIS.Models.User>
 
-@foreach (var message in Model){
+@foreach (var message in Model.Item1){
   <div class="card mt-3">
     <div class="card-body">
       <h5 class="card-title">@message.topic</h5>
@@ -8,6 +8,7 @@
       <h6 class="card-subtitle">Gavėjas: @message.toUsername</h6>
       <h6 class="card-subtitle mb-2 text-body-secondary">Data: @message.date</h6>      
       <p class="card-text">@message.content</p>
+
       <button type="button" class="btn btn-outline-success">
           
           @{
@@ -45,10 +46,22 @@
   </div>
 }
 
-<div class="mt-5">
-    <label for="description" class="form-label">Atsakyti</label>
-    <textarea class="form-control" id="description" rows="3" placeholder="Įveskite žinutę, kurią noritę išsiųsti"
-        required></textarea>
-</div>
+<form asp-controller="Messages" asp-action="SendMessage" method="post" class="needs-validation" novalidate="" autocomplete="off">
+    
+    @{
+      var lastMessage = Model.Item1.Last();
+      var currentUsername = Model.Item2.username;
 
-<button type="button" class="btn btn-primary mt-2">Siųsti žinutę</button>
+      string toUsername = lastMessage.toUsername;
+      if (toUsername == currentUsername){
+        toUsername = lastMessage.fromUsername;
+      }
+    }
+    <input type="hidden" name="topic" value="@lastMessage.topic" />
+    <input type="hidden" name="toUsername" value="@toUsername" />
+
+    <label for="message" class="form-label">Atsakyti</label>
+    <input class="form-control" id="message" name="message" placeholder="Įveskite žinutę, kurią noritę išsiųsti" required></input>
+    <button type="submit" class="btn btn-primary mt-2">Siųsti žinutę</button>
+</form>
+

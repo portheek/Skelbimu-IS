@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
+using Microsoft.AspNetCore.Components.Web;
 
 
 namespace SkelbimuIS.Controllers
@@ -40,7 +41,8 @@ namespace SkelbimuIS.Controllers
         public IActionResult ViewMessages(string contactUsername)
         {
             List<Message> messages = database.getCommonMessages(currentUser.username, contactUsername);
-            return View(messages);
+            var model = new Tuple<List<Message>, User>(messages, currentUser);
+            return View("ViewMessages", model);
         }
 
         public IActionResult NewMessage()
@@ -51,7 +53,12 @@ namespace SkelbimuIS.Controllers
         [HttpPost]
         public IActionResult SendMessage(string toUsername, string topic, string message)
         {
-            Console.WriteLine(toUsername);
+            if(toUsername == "" || topic == "" || message == "")
+            {
+                ViewBag.ErrorMessage = "Užpildti ne visi laukai!";
+                return View("NewMessage");
+            }
+
             if(!database.userExists("username", toUsername) && toUsername != "")
             {
                 ViewBag.ErrorMessage = "Toks vartotojas neegzistuoja!";
@@ -76,7 +83,7 @@ namespace SkelbimuIS.Controllers
             database.addMessage(newMessage);
             
             ViewBag.SuccessMessage = "Žinutė išsiųsta!";
-            return View("NewMessage");
+            return ViewMessages(toUsername);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
