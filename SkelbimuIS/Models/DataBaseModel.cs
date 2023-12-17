@@ -202,6 +202,16 @@ namespace SkelbimuIS.Models
             }
         }
 
+        public void deleteMessage(int id)
+        {
+            string sqlQuery = "DELETE FROM messages WHERE id=@id";
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+            }
+        }
+
         public User getUser(string email, string password)
         {
             string hashedPassword = passwordHash.HashPassword(password);

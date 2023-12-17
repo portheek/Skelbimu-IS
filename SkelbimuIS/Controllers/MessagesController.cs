@@ -50,6 +50,12 @@ namespace SkelbimuIS.Controllers
             return View();
         }
 
+        public void DeleteMessage(int id)
+        {
+            database.deleteMessage(id);
+            Console.WriteLine(id);
+        }
+
         [HttpPost]
         public IActionResult SendMessage(string toUsername, string topic, string message)
         {
@@ -83,7 +89,7 @@ namespace SkelbimuIS.Controllers
             database.addMessage(newMessage);
             
             ViewBag.SuccessMessage = "Žinutė išsiųsta!";
-            return ViewMessages(toUsername);
+            return ViewMessages(newMessage.toUsername);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
