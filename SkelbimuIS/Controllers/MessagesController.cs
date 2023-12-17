@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components.Web;
+using System.Data.Common;
 
 
 namespace SkelbimuIS.Controllers
@@ -53,7 +54,11 @@ namespace SkelbimuIS.Controllers
         public void DeleteMessage(int id)
         {
             database.deleteMessage(id);
-            Console.WriteLine(id);
+        }
+        
+        public void SendReaction(int score, int messageId)
+        {
+            database.updateMessageReaction(score, messageId);
         }
 
         [HttpPost]

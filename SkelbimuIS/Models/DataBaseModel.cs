@@ -109,6 +109,17 @@ namespace SkelbimuIS.Models
             return messages;  
         }
 
+        public void updateMessageReaction(int score, int messageId)
+        {   
+            string sqlQuery = "UPDATE messages SET reaction=reaction+@score WHERE id=@id";
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {   
+                command.Parameters.AddWithValue("@id", messageId);
+                command.Parameters.AddWithValue("@score", score);
+                command.ExecuteNonQuery();
+            }
+        }
+
         public List<string> getAllUserContacts(string username)
         {
                                                                        
