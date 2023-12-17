@@ -4,7 +4,7 @@ namespace SkelbimuIS.Models
 {
     public class DataBaseModel
     {
-        string connectionString = "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;";
+        private readonly string connectionString = "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;Allow User Variables=true";
         private MySqlConnection connection;
         private PasswordHashService passwordHash;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -50,13 +50,15 @@ namespace SkelbimuIS.Models
 
         public User getUserById(int id)
         {
-            
-            string sqlQuery = $"SELECT * FROM users WHERE id={id}";
+            string sqlQuery = "SELECT * FROM users WHERE id=@id";
             
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
+                command.Parameters.AddWithValue("@id", id);
+
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
+                    
                     while (reader.Read())
                     {
                         User user = new User
@@ -77,11 +79,14 @@ namespace SkelbimuIS.Models
         public List<Message> getCommonMessages(string currentUsername, string contactUsername)
         {
 
-            string sqlQuery = $"SELECT * FROM messages WHERE (fromUsername = '{currentUsername}' AND toUsername = '{contactUsername}') OR (fromUsername = '{contactUsername}' AND toUsername = '{currentUsername}') ORDER BY date;";
+            string sqlQuery = "SELECT * FROM messages WHERE (fromUsername = @currentUsername AND toUsername = @contactUsername) OR (fromUsername = @contactUsername AND toUsername = @currentUsername) ORDER BY date;";
             List<Message> messages = new List<Message>();
 
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
+                command.Parameters.AddWithValue("@currentUsername", currentUsername);
+                command.Parameters.AddWithValue("@contactUsername", contactUsername);
+
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -107,11 +112,13 @@ namespace SkelbimuIS.Models
         public List<string> getAllUserContacts(string username)
         {
                                                                        
-            string sqlQuery = $"SELECT DISTINCT personName FROM ( SELECT fromUsername AS personName FROM messages WHERE toUsername = '{username}' UNION SELECT toUsername AS personName FROM messages WHERE fromUsername = '{username}') AS people_interacted;";
+            string sqlQuery = "SELECT DISTINCT personName FROM ( SELECT fromUsername AS personName FROM messages WHERE toUsername = @username UNION SELECT toUsername AS personName FROM messages WHERE fromUsername = @username) AS people_interacted;";
             List<string> userNames = new List<string>();
 
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
-            {
+            {   
+                command.Parameters.AddWithValue("@username", username);
+
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -134,16 +141,14 @@ namespace SkelbimuIS.Models
             string email = user.email;
             string role = user.role;
 
-            Console.WriteLine(username);
-
-            string sqlQuery = $"INSERT INTO users (username, email, password, role) VALUES ('{username}', '{email}', '{password}', '{role}');";
+            string sqlQuery = "INSERT INTO users (username, email, password, role) VALUES (@username, @email, @password, @role);";
 
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
-                command.Parameters.AddWithValue("username", username);
-                command.Parameters.AddWithValue("email", email);
-                command.Parameters.AddWithValue("password", password);
-                command.Parameters.AddWithValue("role", role);
+                command.Parameters.AddWithValue("@username", username);
+                command.Parameters.AddWithValue("@email", email);
+                command.Parameters.AddWithValue("@password", password);
+                command.Parameters.AddWithValue("@role", role);
 
                 command.ExecuteNonQuery();
             }
@@ -151,12 +156,17 @@ namespace SkelbimuIS.Models
 
         public bool userExists(string column, string value)
         {
+            List<string> allowedColumns = new List<string> { "username", "email", "role", "id", "password"};
+            if (!allowedColumns.Contains(column.ToLower()))
+            {
+                throw new ArgumentException("invalid column name.");
+            }
 
-            string sqlQuery = $"SELECT * FROM users WHERE {column} = '{value}'";
-
+            string sqlQuery = $"SELECT * FROM users WHERE {column} = @value";
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
-                command.Parameters.AddWithValue(column, value);
+                command.Parameters.AddWithValue("@value", value);
+
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
@@ -168,15 +178,39 @@ namespace SkelbimuIS.Models
             }
         }
 
-        public User getUser(string email, string password)
+        public void addMessage(Message message)
         {
-            string hashedPassword = passwordHash.HashPassword(password);
-            string sqlQuery = $"SELECT * FROM users WHERE email = '{email}' AND password = '{hashedPassword}'";
+            string toUsername = message.toUsername;
+            string fromUsername = message.fromUsername;
+            string topic = message.topic;
+            string content = message.content;
+            int reaction = message.reaction;
+            DateTime date = message.date;
+
+            string sqlQuery = "INSERT INTO messages (fromUsername, toUsername, topic, message, reaction, date)" +
+                  "VALUES (@fromUsername, @toUsername, @topic, @content, @reaction, @date);";
 
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
-                command.Parameters.AddWithValue("email", email);
-                command.Parameters.AddWithValue("password", password);
+                command.Parameters.AddWithValue("@fromUsername", fromUsername);
+                command.Parameters.AddWithValue("@toUsername", toUsername);
+                command.Parameters.AddWithValue("@topic", topic);
+                command.Parameters.AddWithValue("@content", content);
+                command.Parameters.AddWithValue("@reaction", reaction);
+                command.Parameters.AddWithValue("@date", date);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public User getUser(string email, string password)
+        {
+            string hashedPassword = passwordHash.HashPassword(password);
+            string sqlQuery = "SELECT * FROM users WHERE email = @email AND password = @hashedPassword";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@email", email);
+                command.Parameters.AddWithValue("@hashedPassword", hashedPassword);
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())

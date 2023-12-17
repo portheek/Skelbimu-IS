@@ -1,9 +1,3 @@
-using Microsoft.AspNetCore.Http;
-using SkelbimuIS.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using MySqlConnector;
-
 namespace SkelbimuIS.Models
 {    
     public class Message

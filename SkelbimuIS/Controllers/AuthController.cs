@@ -96,21 +96,6 @@ namespace SkelbimuIS.Controllers
             return new OkResult();
         }
 
-        public IActionResult GetUserObject()
-        {
-            var serializedUserObject = _httpContextAccessor.HttpContext.Session.GetString("UserObject");
-
-            if (serializedUserObject != null)
-            {
-                var userObject = JsonSerializer.Deserialize<User>(serializedUserObject);
-
-                return new OkObjectResult(userObject);
-            }
-
-            return new NotFoundResult();
-        }
-
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

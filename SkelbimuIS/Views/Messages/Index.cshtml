@@ -11,29 +11,27 @@
     </div>
 }
 else{
+    <h1 class="display-5">Žinučių kambarys</h1>
 
+    <h3 class="mt-2">Jūsų kontaktai:</h3>
+    <div class="list-group">
+            
+            @foreach (var name in Model)
+            {
+                <a class="btn list-group-item list-group-item-action" asp-controller="Messages" asp-action="ViewMessages" asp-route-contactUsername="@name">
+                    <strong>@name</strong>
+                    <span class="badge bg-success">Naujas</span>
+                </a>
+            }
+            
+    </div>
+    <nav class="mt-2" aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+        </ul>
+    </nav>
 
-<h1 class="display-5">Žinučių kambarys</h1>
-
-<h3 class="mt-2">Jūsų kontaktai:</h3>
-<div class="list-group">
-        
-        @foreach (var name in Model)
-        {
-            <a class="btn list-group-item list-group-item-action" asp-controller="Messages" asp-action="ViewMessages" asp-route-contactUsername="@name">
-                <strong>@name</strong>
-                <span class="badge bg-success">Naujas</span>
-            </a>
-        }
-        
-</div>
-<nav class="mt-2" aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-    </ul>
-</nav>
-
-<a class="btn btn-primary" asp-controller="Messages" asp-action="NewMessage">Siųsti naują žinutę</a>
+    <a class="btn btn-primary" asp-controller="Messages" asp-action="NewMessage">Siųsti naują žinutę</a>
 }

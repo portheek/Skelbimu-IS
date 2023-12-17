@@ -48,6 +48,37 @@ namespace SkelbimuIS.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult SendMessage(string toUsername, string topic, string message)
+        {
+            Console.WriteLine(toUsername);
+            if(!database.userExists("username", toUsername) && toUsername != "")
+            {
+                ViewBag.ErrorMessage = "Toks vartotojas neegzistuoja!";
+                return View("NewMessage");
+            }
+            
+            if(currentUser.username == toUsername)
+            {
+                ViewBag.ErrorMessage = "Negalima siųsti žinutės sau!";
+                return View("NewMessage");
+            }
+            
+            Message newMessage = new Message()
+            {
+                fromUsername = currentUser.username,
+                toUsername = toUsername,
+                topic = topic,
+                content = message,
+                reaction = 0,
+                date = DateTime.Now
+            };
+            database.addMessage(newMessage);
+            
+            ViewBag.SuccessMessage = "Žinutė išsiųsta!";
+            return View("NewMessage");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
