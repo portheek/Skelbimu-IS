@@ -4,7 +4,7 @@ namespace SkelbimuIS.Models
 {
     public class DataBaseModel
     {
-        private readonly string connectionString = "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;Allow User Variables=true";
+        private readonly string connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=pma;Allow User Variables=true;";// "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;Allow User Variables=true";
         private MySqlConnection connection;
         private PasswordHashService passwordHash;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -16,6 +16,44 @@ namespace SkelbimuIS.Models
             passwordHash = new PasswordHashService();
             _httpContextAccessor = httpContextAccessor;
         }
+
+        public List<Ad> getAllAds()
+        {
+            List<Ad> ads = new List<Ad>();
+
+            string sqlQuery = "SELECT * FROM ad";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Ad ad = new Ad
+                        {
+                            id = reader.GetInt32(0),
+                            pavadinimas = reader.GetString(1),
+                            numeris = reader.GetString(2),
+                            pastas = reader.GetString(3),
+                            aprasas = reader.GetString(4),
+                            kaina = reader.GetDecimal(5),
+                            ivertis = reader.GetDecimal(6),
+                            reputacija = reader.GetDecimal(7),
+                            miestas = reader.GetString(8),
+                            perziuros = reader.GetInt32(9),
+                            data = reader.GetDateTime(10),
+                            megst = reader.GetBoolean(11),
+                            pardavejoId = reader.GetInt32(12),
+                            kategorija = reader.GetString(13)
+                        };
+                        Console.WriteLine("ree");
+                        ads.Add(ad);
+                    }
+                }
+            }
+            return ads;
+        }
+
 
         //not used
         public List<Message> getAllMessages()

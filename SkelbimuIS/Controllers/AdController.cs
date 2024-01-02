@@ -10,11 +10,12 @@ namespace SkelbimuIS.Controllers
         private readonly ILogger<AdController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly User currentUser;
+        private DataBaseModel database;
         public AdController(ILogger<AdController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
-
+            database = new DataBaseModel(_httpContextAccessor);
             var serializedUserObject = _httpContextAccessor.HttpContext.Session.GetString("UserObject");
             
             if (serializedUserObject == null){
@@ -25,6 +26,7 @@ namespace SkelbimuIS.Controllers
 
         public IActionResult Index()
         {
+            List<Ad> ads = database.getAllAds();
             return View();
         }
 
@@ -41,6 +43,14 @@ namespace SkelbimuIS.Controllers
         public IActionResult ViewAd()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Ad> ads = database.getAllAds();
+            Console.WriteLine("reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            return View(ads);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
