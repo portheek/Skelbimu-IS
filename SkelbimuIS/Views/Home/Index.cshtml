@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <div class="container mt-5">
+@*     <div class="container mt-5">
         <h1 class="mb-4">Visi skelbimai</h1>
         <div class="row">
             <div class="col-12 mb-4">
@@ -70,6 +70,40 @@
                         <button class='btn btn-success'>Įvertinti</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div> *@
+
+
+    @model List<SkelbimuIS.Models.Ad>
+    <div class="container mt-5">
+        <h1 class="mb-4">Visi skelbimai</h1>
+        <div class="row">
+            <div class="col-12 mb-4">
+                
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var ad in Model)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">@ad.pavadinimas</h5>
+                                <p class="card-text">@ad.aprasas</p>
+                                <p class="card-text"><strong>Kategorija:</strong> @ad.kategorija</p>
+                                <p class="card-text"><strong>Kaina:</strong> @ad.kaina</p>
+
+                                <a href="@Url.Action("ViewAd", "Ad", new { id = ad.id })" class="btn btn-primary" role="button">Atidaryti</a>
+                                <button class="btn btn-danger">Ištrinti</button>
+                                <button class="btn btn-warning">Pridėti į mėgstamus</button>
+                                <button class="btn btn-success">Įvertinti</button>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No ads available.</p>
+                }
             </div>
         </div>
     </div>

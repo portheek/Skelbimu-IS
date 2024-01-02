@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SkelbimuIS.Models;
 using System.Diagnostics;
 
@@ -7,15 +8,21 @@ namespace SkelbimuIS.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private DataBaseModel database;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+            database = new DataBaseModel(_httpContextAccessor);
         }
 
         public IActionResult Index()
         {
-            return View();
+            List<Ad> ads = database.getAllAds();
+            Console.WriteLine(ads.Capacity.ToString());
+            return View(ads);
         }
 
         public IActionResult Privacy()
