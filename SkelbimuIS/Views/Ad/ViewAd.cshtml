@@ -7,18 +7,30 @@
     <title>Skelbimas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
+@model SkelbimuIS.Models.Ad
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Skelbimas</h1>
+        <h1 class="mb-4">Skelbimas: @Model.pavadinimas</h1>
 
         <!-- Single Ad Details -->
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Skelbimo pavadinimas</h5>
-                <p class="card-text">Skelbimo aprašymas</p>
-                <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
-                <p class="card-text"><strong>Kaina:</strong>100</p>
+                <p class="card-text"><strong>Skelbimo aprašymas:</strong> @Model.aprasas</p>
+                <p class="card-text"><strong>Kategorija:</strong> @Model.kategorija</p>
+                <p class="card-text"><strong>Kaina:</strong> @Model.kaina </p>
+                <p class="card-text"><strong>Ivertis:</strong> @Model.ivertis </p>
+                <p class="card-text"><strong>Miestas:</strong> @Model.miestas </p>
+                <p class="card-text"><strong>Įkelimo data:</strong> @Model.data </p>
+            </div>
+        </div>
+
+        <h1 class="mb-4">Pardavėjo informacija:</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text"><strong>e-paštas:</strong> @Model.pastas</p>
+                <p class="card-text"><strong>Telefono numeris:</strong> @Model.numeris</p>
+                <p class="card-text"><strong>Reputacija:</strong> @Model.reputacija </p>
             </div>
         </div>
 
@@ -36,7 +48,7 @@
         </div>
 
     </div>
-    
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>

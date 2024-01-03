@@ -46,12 +46,92 @@ namespace SkelbimuIS.Models
                             pardavejoId = reader.GetInt32(12),
                             kategorija = reader.GetString(13)
                         };
-                        Console.WriteLine("ree");
                         ads.Add(ad);
                     }
                 }
             }
             return ads;
+        }
+
+        internal Ad getAdById(int adId)
+        {
+            string sqlQuery = "SELECT * FROM ad WHERE id=@adId";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@adId", adId);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Ad ad = new Ad
+                        {
+                            id = reader.GetInt32(0),
+                            pavadinimas = reader.GetString(1),
+                            numeris = reader.GetString(2),
+                            pastas = reader.GetString(3),
+                            aprasas = reader.GetString(4),
+                            kaina = reader.GetDecimal(5),
+                            ivertis = reader.GetDecimal(6),
+                            reputacija = reader.GetDecimal(7),
+                            miestas = reader.GetString(8),
+                            perziuros = reader.GetInt32(9),
+                            data = reader.GetDateTime(10),
+                            megst = reader.GetBoolean(11),
+                            pardavejoId = reader.GetInt32(12),
+                            kategorija = reader.GetString(13)
+                        };
+                        return ad;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public int addAd(Ad ad)
+        {
+            string pavadinimas = ad.pavadinimas;
+            string numeris = ad.numeris;
+            string pastas = ad.pastas;
+            string aprasas = ad.aprasas;
+            decimal kaina = ad.kaina;
+            decimal ivertis = ad.ivertis;
+            decimal reputacija = ad.reputacija;
+            string miestas = ad.miestas;
+            int perziuros = ad.perziuros;
+            DateTime data = ad.data;
+            bool megst = ad.megst;
+            int pardId = ad.pardavejoId;
+            string kategorija = ad.kategorija;
+
+            Console.WriteLine(pavadinimas);
+
+            string sqlQuery = $"INSERT INTO ad (pavadinimas, numeris, pastas, aprasas, kaina, ivertis, reputacija, miestas, perziuros, megst, pardId, kategorija) " +
+                $"VALUES ('{pavadinimas}', '{numeris}', '{pastas}', '{aprasas}', '{kaina}', '{ivertis}', '{reputacija}', '{miestas}', '{perziuros}', '{megst}', '{pardId}', '{kategorija}');";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("pavadinimas", pavadinimas);
+                command.Parameters.AddWithValue("numeris", numeris);
+                command.Parameters.AddWithValue("pastas", pastas);
+                command.Parameters.AddWithValue("aprasas", aprasas);
+                command.Parameters.AddWithValue("kaina", kaina);
+                command.Parameters.AddWithValue("ivertis", ivertis);
+                command.Parameters.AddWithValue("reputacija", reputacija);
+                command.Parameters.AddWithValue("miestas", miestas);
+                command.Parameters.AddWithValue("perziuros", perziuros);
+                command.Parameters.AddWithValue("megst", megst);
+                command.Parameters.AddWithValue("pardId", pardId);
+                command.Parameters.AddWithValue("kategorija", kategorija);
+
+                command.ExecuteNonQuery();
+
+                command.CommandText = "SELECT LAST_INSERT_ID();";
+                int lastInsertedId = Convert.ToInt32(command.ExecuteScalar());
+
+                return lastInsertedId;
+            }
         }
 
 

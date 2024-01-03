@@ -26,52 +26,52 @@
         </div>
     </div>
 
-@*     <div class="container mt-5">
-        <h1 class="mb-4">Visi skelbimai</h1>
-        <div class="row">
-            <div class="col-12 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Pavadinimas</h5>
-                        <p class="card-text">Aprasymas</p>
-                        <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
-                        <p class="card-text"><strong>Kaina:</strong> 15.15</p>
+    @*     <div class="container mt-5">
+    <h1 class="mb-4">Visi skelbimai</h1>
+    <div class="row">
+    <div class="col-12 mb-4">
+    <div class="card">
+    <div class="card-body">
+    <h5 class="card-title">Pavadinimas</h5>
+    <p class="card-text">Aprasymas</p>
+    <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
+    <p class="card-text"><strong>Kaina:</strong> 15.15</p>
 
-                       
-                        <a class="btn btn-primary" role="button" id="openAd" asp-controller="Ad" asp-action="ViewAd">Atidaryti</a> 
-                        <button class='btn btn-danger'>Ištrinti</button> 
-                        <button class='btn btn-warning'>Pridėti į mėgstamus</button>
-                        <button class='btn btn-success'>Įvertinti</button>
-                    </div>
-                </div>
-                <div class="card mt-2">
-                    <div class="card-body">
-                        <h5 class="card-title">Pavadinimas</h5>
-                        <p class="card-text">Aprasymas</p>
-                        <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
-                        <p class="card-text"><strong>Kaina:</strong> 15.15</p>
 
-                        <button id="openAd" class='btn btn-primary'>Atidaryti</button> 
-                        <button class='btn btn-danger'>Ištrinti</button> 
-                        <button class='btn btn-warning'>Pridėti į mėgstamus</button>
-                        <button class='btn btn-success'>Įvertinti</button>
-                    </div>
-                </div>
-                <div class="card mt-2">
-                    <div class="card-body">
-                        <h5 class="card-title">Pavadinimas</h5>
-                        <p class="card-text">Aprasymas</p>
-                        <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
-                        <p class="card-text"><strong>Kaina:</strong> 15.15</p>
+    <a class="btn btn-primary" role="button" id="openAd" asp-controller="Ad" asp-action="ViewAd">Atidaryti</a>
+    <button class='btn btn-danger'>Ištrinti</button>
+    <button class='btn btn-warning'>Pridėti į mėgstamus</button>
+    <button class='btn btn-success'>Įvertinti</button>
+    </div>
+    </div>
+    <div class="card mt-2">
+    <div class="card-body">
+    <h5 class="card-title">Pavadinimas</h5>
+    <p class="card-text">Aprasymas</p>
+    <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
+    <p class="card-text"><strong>Kaina:</strong> 15.15</p>
 
-                        <button id="openAd" class='btn btn-primary'>Atidaryti</button> 
-                        <button class='btn btn-danger'>Ištrinti</button> 
-                        <button class='btn btn-warning'>Pridėti į mėgstamus</button>
-                        <button class='btn btn-success'>Įvertinti</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <button id="openAd" class='btn btn-primary'>Atidaryti</button>
+    <button class='btn btn-danger'>Ištrinti</button>
+    <button class='btn btn-warning'>Pridėti į mėgstamus</button>
+    <button class='btn btn-success'>Įvertinti</button>
+    </div>
+    </div>
+    <div class="card mt-2">
+    <div class="card-body">
+    <h5 class="card-title">Pavadinimas</h5>
+    <p class="card-text">Aprasymas</p>
+    <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
+    <p class="card-text"><strong>Kaina:</strong> 15.15</p>
+
+    <button id="openAd" class='btn btn-primary'>Atidaryti</button>
+    <button class='btn btn-danger'>Ištrinti</button>
+    <button class='btn btn-warning'>Pridėti į mėgstamus</button>
+    <button class='btn btn-success'>Įvertinti</button>
+    </div>
+    </div>
+    </div>
+    </div>
     </div> *@
 
 
@@ -80,7 +80,7 @@
         <h1 class="mb-4">Visi skelbimai</h1>
         <div class="row">
             <div class="col-12 mb-4">
-                
+
                 @if (Model != null && Model.Any())
                 {
                     @foreach (var ad in Model)
@@ -88,11 +88,11 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">@ad.pavadinimas</h5>
-                                <p class="card-text">@ad.aprasas</p>
+                                <p class="card-text"><strong>Ivertis:</strong> @ad.ivertis</p>
                                 <p class="card-text"><strong>Kategorija:</strong> @ad.kategorija</p>
                                 <p class="card-text"><strong>Kaina:</strong> @ad.kaina</p>
 
-                                <a href="@Url.Action("ViewAd", "Ad", new { id = ad.id })" class="btn btn-primary" role="button">Atidaryti</a>
+                                <a class="btn btn-primary" asp-controller="Ad" asp-action="ViewAd" asp-route-AdId="@ad.id"> Atidaryti</a>
                                 <button class="btn btn-danger">Ištrinti</button>
                                 <button class="btn btn-warning">Pridėti į mėgstamus</button>
                                 <button class="btn btn-success">Įvertinti</button>
