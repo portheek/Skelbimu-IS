@@ -119,8 +119,6 @@ namespace SkelbimuIS.Models
             int pardId = ad.pardavejoId;
             string kategorija = ad.kategorija;
 
-            Console.WriteLine(pavadinimas);
-
             string sqlQuery = $"INSERT INTO ad (pavadinimas, numeris, pastas, aprasas, kaina, ivertis, reputacija, miestas, perziuros, megst, pardId, kategorija) " +
                 $"VALUES ('{pavadinimas}', '{numeris}', '{pastas}', '{aprasas}', '{kaina}', '{ivertis}', '{reputacija}', '{miestas}', '{perziuros}', '{megst}', '{pardId}', '{kategorija}');";
 
@@ -187,6 +185,53 @@ namespace SkelbimuIS.Models
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
                 command.Parameters.AddWithValue("@id", adId);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        internal List<Score> getAllScores(int adId)
+        {
+            List<Score> scores = new List<Score>();
+
+            string sqlQuery = "SELECT * FROM score WHERE adid=@id";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@id", adId);
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Score score = new Score
+                        {
+                            pardavejoId = reader.GetInt32(0),
+                            skelbimoId = reader.GetInt32(1),
+                            ivertis = reader.GetDecimal(2),
+                            data = reader.GetDateTime(3),
+                        };
+                        scores.Add(score);
+                    }
+                }
+            }
+            return scores;
+        }
+
+        public void addScore(Score score)
+        {
+            int userId = score.pardavejoId;
+            int adId = score.skelbimoId;
+            decimal ivertis = score.ivertis;
+
+
+            string sqlQuery = $"INSERT INTO score (userid, adid, ivertis) " +
+                $"VALUES ('{userId}', '{adId}', '{ivertis}');";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("userid", userId);
+                command.Parameters.AddWithValue("adid", adId);
+                command.Parameters.AddWithValue("ivertis", ivertis);
+
                 command.ExecuteNonQuery();
             }
         }

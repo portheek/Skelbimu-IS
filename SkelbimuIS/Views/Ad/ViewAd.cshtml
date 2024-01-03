@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 
+@{
+    ViewBag.Title = "ViewAd";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +51,19 @@
                 <p class="card-text"><strong>Reputacija:</strong> @Model.reputacija </p>
             </div>
         </div>
+
+        <div class="container mt-5">
+            <form asp-controller="Ad" asp-action="AddScore" method="post" class="needs-validation" novalidate="" autocomplete="off">
+                <div class="mb-3">
+                    <label for="score" class="form-label">Įveskite įvertį nuo 0 iki 10</label>
+                    <input type="number" class="form-control" id="score" name="score" min="0" max="10" step="0.1" required>
+                </div>
+                <input type="hidden" id="Adid" name="Adid" value="@Model.id">
+                <button type="submit" class="btn btn-primary">Vertinti</button>
+            </form>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
         <div class="mt-5">
             <h2>Komentarai</h2>
