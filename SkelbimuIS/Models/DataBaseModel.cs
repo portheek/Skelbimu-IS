@@ -17,17 +17,44 @@ namespace SkelbimuIS.Models
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public List<Ad> getAllAds(User user, String searchQuery = null)
+        public List<Ad> getAllAds(User user, String searchQuery = null, String priceFrom = null, String priceTo = null, String city = null, String category = null)
         {
             List<Ad> ads = new List<Ad>();
 
-            string sqlQuery = "SELECT * FROM ad";
+            string sqlQuery = "";
+
+            //sqlQuery = "SELECT * FROM ad WHERE pavadinimas LIKE '%{0}%' AND kaina > priceFrom AND kaina < priceTo AND miestas = city AND kategorija = category";
 
             if (searchQuery != null)
             {
-                sqlQuery = String.Format("SELECT * FROM ad WHERE pavadinimas LIKE '%{0}%'", searchQuery);
+                sqlQuery = String.Format("SELECT * FROM ad WHERE pavadinimas LIKE '%{0}%' AND", searchQuery);
             }
-   
+            else
+            {
+                sqlQuery = "SELECT * FROM ad WHERE ";
+            }
+
+            int priceFromInt = 0, priceToInt = int.MaxValue;
+
+            if (priceFrom != null)
+                priceFromInt = int.Parse(priceFrom);
+
+            if (priceTo != null)
+                priceToInt = int.Parse(priceTo);
+
+
+            sqlQuery = String.Format($"{sqlQuery} kaina > {priceFromInt} AND kaina < {priceToInt}");
+
+            if(city != null)
+            {
+                sqlQuery = String.Format($"{sqlQuery} AND miestas = \"{city}\"");
+            }
+
+            if (category != null)
+            {
+                sqlQuery = String.Format($"{sqlQuery} AND kategorija = \"{category}\"");
+            }
+
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
@@ -472,6 +499,11 @@ namespace SkelbimuIS.Models
 
         public bool CheckIfAdIsAddedToFavourites(User user, int id)
         {
+            if(user == null)
+            {
+                return false;
+            }
+
             int userid = user.id;
 
 

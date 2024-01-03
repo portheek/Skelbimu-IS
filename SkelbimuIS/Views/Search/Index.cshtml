@@ -26,11 +26,11 @@
                                 <button class="btn btn-danger">Ištrinti</button>
                                 @if(ad.megst)
                                 {
-                                    <a class="btn btn-secondary" asp-controller="Search" asp-action="RemoveAdFromFavourites" asp-route-AdId="@ad.id" asp-route-query="@Model.query">Pašalinti iš mėgstamų</a>
+                                    <a class="btn btn-secondary" asp-controller="Search" asp-action="RemoveAdFromFavourites" asp-route-AdId="@ad.id">Pašalinti iš mėgstamų</a>
                                 }
                                 else
                                 {
-                                    <a class="btn btn-warning" asp-controller="Search" asp-action="AddAdToFavourites" asp-route-AdId="@ad.id" asp-route-query="@Model.query">Pridėti į mėgstamus</a>
+                                    <a class="btn btn-warning" asp-controller="Search" asp-action="AddAdToFavourites" asp-route-AdId="@ad.id">Pridėti į mėgstamus</a>
                                 }
                                 <button class="btn btn-success">Įvertinti</button>
                             </div>

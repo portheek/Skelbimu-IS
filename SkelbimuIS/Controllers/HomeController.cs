@@ -30,12 +30,6 @@ namespace SkelbimuIS.Controllers
 
         public IActionResult Index()
         {
-            if (currentUser == null)
-            {
-                ViewData["PleaseLogIn"] = "Norėdami matyti skelbimų sąrašą, prisijunkite.";
-                return View(null);
-            }
-
             List<Ad> ads = database.getAllAds(currentUser);
             Console.WriteLine(ads.Capacity.ToString());
             return View(ads);

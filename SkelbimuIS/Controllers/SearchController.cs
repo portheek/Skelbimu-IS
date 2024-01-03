@@ -26,37 +26,39 @@ namespace SkelbimuIS.Controllers
 
 
 
-        public IActionResult Index(String query)
+        public IActionResult Index(String query, String priceFrom, String priceTo, String city, String category)
         {
             SearchModel model = new SearchModel();
             model.query = query;
 
-            List<Ad> adList = database.getAllAds(currentUser, query);
+            List<Ad> adList = database.getAllAds(currentUser, query, priceFrom, priceTo, city, category);
             model.ads = adList;
 
             database.InsertSearchHistory(currentUser, model);
 
+
             return View(model);
         }
 
-        public IActionResult AddAdToFavourites(int AdId, String query)
+        public IActionResult AddAdToFavourites(int AdId)
         {
             if (!database.CheckIfAdIsAddedToFavourites(currentUser, AdId))
             {
                 database.AddAdToFavourites(currentUser, AdId);
             }
 
-            return Redirect($"/Search/Index?query={query}");
+
+            return Redirect(Request.Headers["Referer"]!.ToString());
         }
 
-        public IActionResult RemoveAdFromFavourites(int AdId, string query)
+        public IActionResult RemoveAdFromFavourites(int AdId)
         {
             if (database.CheckIfAdIsAddedToFavourites(currentUser, AdId))
             {
                 database.RemoveAdFromFavourites(currentUser, AdId);
             }
 
-            return Redirect($"/Search/Index?query={query}");
+            return Redirect(Request.Headers["Referer"]!.ToString());
         }
     }
 }

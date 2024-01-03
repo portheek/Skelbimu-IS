@@ -5,18 +5,39 @@
                 <textarea class="form-control" id="searchbar" name="query" rows="1" placeholder="Paieška"></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block" id="search">Ieškoti</button>
-            <button type="button" class="btn btn-secondary btn-block" id="filter">Filtruoti</button>
-            <a class="btn btn-secondary" asp-controller="History" asp-action="Index">Istorija</a>
+            <div class="row mt-2">
+                <div class="col-sm">
+                  <input type="text" class="form-control" id="priceFrom" name="priceFrom" placeholder="Kaina nuo">
+                </div>
+                <div class="col-sm">
+                  <input type="text" class="form-control" id="priceTo" name="priceTo" placeholder="Kaina iki">
+                </div>
+                <div class="col-sm">
+                   <select class="form-select" id="city" name="city">
+                        <option value="" disabled selected>Miestas</option>
+                        <option value="Vilnius">Vilnius</option>
+                        <option value="Kaunas">Kaunas</option>
+                        <option value="Klaipėda">Klaipėda</option>
+                        <option value="Ukmergė">Ukmergė</option>
+                    </select>
+                </div>
+                <div class="col-sm">
+                   <select class="form-select" id="category" name="category">
+                        <option value="" disabled selected>Kategorija</option>
+                        <option value="Įrenginiai">Įrenginiai</option>
+                        <option value="Rūbai">Rūbai</option>
+                        <option value="Baldai">Baldai</option>
+                        <option value="Knygos">Knygos</option>
+                    </select>
+                </div>
+            </div>
+            
+  
+            <button type="submit" class="btn btn-primary btn-block mt-2" id="search">Ieškoti</button>
+            <a class="btn btn-secondary mt-2" asp-controller="History" asp-action="Index">Istorija</a>
         </form>
         
     </div>
-
-    @if(ViewData["PleaseLogIn"] != null)
-    {
-        @ViewData["PleaseLogIn"];
-        return;
-    }
 
 
     @model List<SkelbimuIS.Models.Ad>
