@@ -531,6 +531,9 @@ namespace SkelbimuIS.Models
 
         public List<SearchModel> GetUserSearchHistory(User user)
         {
+            if (user == null)
+                return null;
+
             List<SearchModel> queries = new List<SearchModel>();
             int userid = user.id;
             Console.WriteLine($"User id: {userid};");
@@ -615,5 +618,85 @@ namespace SkelbimuIS.Models
                 command.ExecuteNonQuery();
             }
         }
+
+        public String GetMostSearchedCategory(User user)
+        {
+            if (user == null)
+                return null;
+
+            int userid = user.id;
+            string sqlQuery = $"SELECT category, COUNT(category) AS `value_occurrence` FROM search_history WHERE user = {userid} GROUP BY category ORDER BY `value_occurrence` DESC LIMIT 1";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        return reader.GetString(0);
+                    }
+                }
+            }
+            return null;
+        }
+
+        public List<Ad> getRecommendedAds(User user)
+        {
+            List<Ad> ads = new List<Ad>();
+
+            if (user == null)
+                return ads;
+
+            string sqlQuery = "";
+
+            if (GetUserSearchHistory(user).Count < 1)
+            {
+                sqlQuery = $"SELECT * FROM ad ORDER BY reputacija, ivertis DESC LIMIT 3";
+            }
+            else
+            {
+                string category = GetMostSearchedCategory(user);
+                sqlQuery = $"SELECT * FROM ad WHERE kategorija = \"{category}\" ORDER BY reputacija, ivertis DESC LIMIT 3";
+            }
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Ad ad = new Ad
+                        {
+                            id = reader.GetInt32(0),
+                            pavadinimas = reader.GetString(1),
+                            numeris = reader.GetString(2),
+                            pastas = reader.GetString(3),
+                            aprasas = reader.GetString(4),
+                            kaina = reader.GetDecimal(5),
+                            ivertis = reader.GetDecimal(6),
+                            reputacija = reader.GetDecimal(7),
+                            miestas = reader.GetString(8),
+                            perziuros = reader.GetInt32(9),
+                            data = reader.GetDateTime(10),
+                            megst = reader.GetBoolean(11),
+                            pardavejoId = reader.GetInt32(12),
+                            kategorija = reader.GetString(13)
+                        };
+
+                        Console.WriteLine("Yes");
+
+                        ads.Add(ad);
+                    }
+                }
+            }
+
+            foreach (Ad ad in ads)
+            {
+                bool isFavourite = CheckIfAdIsAddedToFavourites(user, ad.id);
+                ad.megst = isFavourite;
+            }
+            return ads;
+        }
+
     }
 }

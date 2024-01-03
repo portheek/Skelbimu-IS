@@ -39,16 +39,45 @@
         
     </div>
 
+    <div class="container mt-5">
+        <h1 class="mb-4">Rekomenduojami skelbimai Jums</h1>
 
-    @model List<SkelbimuIS.Models.Ad>
+            @foreach (var ad in Model.recommendedAds)
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@ad.pavadinimas</h5>
+                        <p class="card-text"><strong>Ivertis:</strong> @ad.ivertis</p>
+                        <p class="card-text"><strong>Kategorija:</strong> @ad.kategorija</p>
+                        <p class="card-text"><strong>Kaina:</strong> @ad.kaina</p>
+
+                        <a class="btn btn-primary" asp-controller="Ad" asp-action="ViewAd" asp-route-AdId="@ad.id"> Atidaryti</a>
+                        <a class="btn btn-primary" asp-controller="Ad" asp-action="EditAd" asp-route-id="@ad.id"> Redaguoti</a>
+                        <button class="btn btn-danger" data-ad-id="@ad.id" onclick="confirmDelete(this)">Ištrinti</button>
+                        @if(ad.megst)
+                        {
+                            <a class="btn btn-secondary" asp-controller="Home" asp-action="RemoveAdFromFavourites" asp-route-AdId="@ad.id">Pašalinti iš mėgstamų</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-warning" asp-controller="Home" asp-action="AddAdToFavourites" asp-route-AdId="@ad.id">Pridėti į mėgstamus</a>
+                        }
+                            
+                    </div>
+                </div>
+            }
+    </div>
+
+
+ 
     <div class="container mt-5">
         <h1 class="mb-4">Visi skelbimai</h1>
         <div class="row">
             <div class="col-12 mb-4">
 
-                @if (Model != null && Model.Any())
+                @if (Model != null)
                 {
-                    @foreach (var ad in Model)
+                    @foreach (var ad in Model.ads)
                     {
                         <div class="card">
                             <div class="card-body">

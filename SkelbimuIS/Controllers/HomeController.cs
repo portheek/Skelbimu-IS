@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SkelbimuIS.Models;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Text.Json;
 
 namespace SkelbimuIS.Controllers
@@ -30,9 +31,13 @@ namespace SkelbimuIS.Controllers
 
         public IActionResult Index()
         {
+            dynamic model = new ExpandoObject();
             List<Ad> ads = database.getAllAds(currentUser);
+            List<Ad> recAds = database.getRecommendedAds(currentUser);
             Console.WriteLine(ads.Capacity.ToString());
-            return View(ads);
+            model.ads = ads;
+            model.recommendedAds = recAds;
+            return View(model);
         }
 
         public IActionResult Privacy()
