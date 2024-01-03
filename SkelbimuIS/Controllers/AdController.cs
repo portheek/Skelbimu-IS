@@ -33,7 +33,6 @@ namespace SkelbimuIS.Controllers
             return View();
         }
 
-
         public IActionResult CreateAd()
         {
             if (currentUser == null)
@@ -88,6 +87,51 @@ namespace SkelbimuIS.Controllers
         {
             Ad Model = database.getAdById(AdId);
             return View("ViewAd", Model);
+        }
+
+        public IActionResult EditAd(int id)
+        {
+            Ad Model = database.getAdById(id);
+            return View("EditAd", Model);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateAd(string title, string description, string phone, string category, string city, int price, int Adid)
+        {
+            Ad Model = database.getAdById(Adid);
+            if (title == "" || description == "" || phone == "" || category == "" || city == "" || price == 0)
+            {
+                ViewBag.ErrorMessage = "Užpildti ne visi laukai!";
+                return View("EditAd", Model);
+            }
+            if (!Regex.IsMatch(phone, @"^[0-9\+]+$"))
+            {
+                ViewBag.ErrorMessage = "Numeris turėtų būt sudaromas iš skaičių ir pliuso!";
+                return View("EditAd", Model);
+            }
+            if (price <= 0)
+            {
+                ViewBag.ErrorMessage = "Kaina negali tapti neigiama ar nuliu!";
+                return View("EditAd", Model);
+            }
+            Ad ad = new Ad
+            {
+                id = Adid,
+                pavadinimas = title,
+                numeris = phone,
+                aprasas = description,
+                kaina = price,
+                ivertis = 0,
+                reputacija = 0,
+                miestas = city,
+                perziuros = 0,
+                data = DateTime.Now,
+                megst = false,
+                kategorija = category
+            };
+
+            database.UpdateAd(ad);
+            return ViewAd(Adid);
         }
 
         [HttpGet]
