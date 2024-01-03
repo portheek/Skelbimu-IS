@@ -1,78 +1,22 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ad Listing</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
-<body>
-
+﻿
     <div class="mt-5">
-        <div class="row">
-            <div class="col-md-10">
-                <textarea class="form-control" id="searchbar" rows="1" placeholder="Paieška"></textarea>
+        <form asp-controller="Search" asp-action="Index" method="get">
+            <div class="row">
+            
+                    <div class="col-md-10">
+                        <textarea class="form-control" id="searchbar" name="query" rows="1" placeholder="Paieška"></textarea>
+                    </div>
+
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-secondary btn-block" id="filter">Filtruoti</button>
+                    </div>
+
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-secondary btn-block" id="search">Ieškoti</button>
+                    </div>
             </div>
-
-            <div class="col-md-1">
-                <button type="button" class="btn btn-secondary btn-block" id="filter">Filtruoti</button>
-            </div>
-
-            <div class="col-md-1">
-                <button type="button" class="btn btn-secondary btn-block" id="search">Ieškoti</button>
-            </div>
-        </div>
+        </form>
     </div>
-
-    @*     <div class="container mt-5">
-    <h1 class="mb-4">Visi skelbimai</h1>
-    <div class="row">
-    <div class="col-12 mb-4">
-    <div class="card">
-    <div class="card-body">
-    <h5 class="card-title">Pavadinimas</h5>
-    <p class="card-text">Aprasymas</p>
-    <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
-    <p class="card-text"><strong>Kaina:</strong> 15.15</p>
-
-
-    <a class="btn btn-primary" role="button" id="openAd" asp-controller="Ad" asp-action="ViewAd">Atidaryti</a>
-    <button class='btn btn-danger'>Ištrinti</button>
-    <button class='btn btn-warning'>Pridėti į mėgstamus</button>
-    <button class='btn btn-success'>Įvertinti</button>
-    </div>
-    </div>
-    <div class="card mt-2">
-    <div class="card-body">
-    <h5 class="card-title">Pavadinimas</h5>
-    <p class="card-text">Aprasymas</p>
-    <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
-    <p class="card-text"><strong>Kaina:</strong> 15.15</p>
-
-    <button id="openAd" class='btn btn-primary'>Atidaryti</button>
-    <button class='btn btn-danger'>Ištrinti</button>
-    <button class='btn btn-warning'>Pridėti į mėgstamus</button>
-    <button class='btn btn-success'>Įvertinti</button>
-    </div>
-    </div>
-    <div class="card mt-2">
-    <div class="card-body">
-    <h5 class="card-title">Pavadinimas</h5>
-    <p class="card-text">Aprasymas</p>
-    <p class="card-text"><strong>Kategorija:</strong> Kategorija</p>
-    <p class="card-text"><strong>Kaina:</strong> 15.15</p>
-
-    <button id="openAd" class='btn btn-primary'>Atidaryti</button>
-    <button class='btn btn-danger'>Ištrinti</button>
-    <button class='btn btn-warning'>Pridėti į mėgstamus</button>
-    <button class='btn btn-success'>Įvertinti</button>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div> *@
 
 
     @model List<SkelbimuIS.Models.Ad>
@@ -107,7 +51,3 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>

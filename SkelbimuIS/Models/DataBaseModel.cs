@@ -4,7 +4,7 @@ namespace SkelbimuIS.Models
 {
     public class DataBaseModel
     {
-        private readonly string connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=pma;Allow User Variables=true;";// "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;Allow User Variables=true";
+        private readonly string connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=skelbimai;Allow User Variables=true;";// "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;Allow User Variables=true";
         private MySqlConnection connection;
         private PasswordHashService passwordHash;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -17,12 +17,17 @@ namespace SkelbimuIS.Models
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public List<Ad> getAllAds()
+        public List<Ad> getAllAds(String searchQuery = null)
         {
             List<Ad> ads = new List<Ad>();
 
             string sqlQuery = "SELECT * FROM ad";
 
+            if (searchQuery != null)
+            {
+                sqlQuery = String.Format("SELECT * FROM ad WHERE pavadinimas LIKE '%{0}%'", searchQuery);
+            }
+   
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())

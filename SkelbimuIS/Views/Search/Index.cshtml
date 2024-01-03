@@ -1,0 +1,40 @@
+﻿
+<div class="container mt-5">
+    <h1 class="mb-4">Rodomi skelbimai pagal užklausą: @Model.query</h1>
+    <div class="row">
+        <div class="col-12 mb-4">
+
+            @if (Model != null)
+            {
+
+                if (Model.ads.Count < 1)
+                {
+                    <p>Skelbimų nesurasta.</p>
+                }
+                else
+                {
+                    @foreach (var ad in Model.ads)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">@ad.pavadinimas</h5>
+                                <p class="card-text"><strong>Ivertis:</strong> @ad.ivertis</p>
+                                <p class="card-text"><strong>Kategorija:</strong> @ad.kategorija</p>
+                                <p class="card-text"><strong>Kaina:</strong> @ad.kaina</p>
+
+                                <a class="btn btn-primary" asp-controller="Ad" asp-action="ViewAd" asp-route-AdId="@ad.id"> Atidaryti</a>
+                                <button class="btn btn-danger">Ištrinti</button>
+                                <button class="btn btn-warning">Pridėti į mėgstamus</button>
+                                <button class="btn btn-success">Įvertinti</button>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <p>Skelbimų nesurasta.</p>
+            }
+        </div>
+    </div>
+</div>
