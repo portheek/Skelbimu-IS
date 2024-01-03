@@ -12,6 +12,11 @@
         
     </div>
 
+    @if(ViewData["PleaseLogIn"] != null)
+    {
+        @ViewData["PleaseLogIn"];
+        return;
+    }
 
 
     @model List<SkelbimuIS.Models.Ad>
@@ -34,8 +39,15 @@
                                 <a class="btn btn-primary" asp-controller="Ad" asp-action="ViewAd" asp-route-AdId="@ad.id"> Atidaryti</a>
                                 <a class="btn btn-primary" asp-controller="Ad" asp-action="EditAd" asp-route-id="@ad.id"> Redaguoti</a>
                                 <button class="btn btn-danger" data-ad-id="@ad.id" onclick="confirmDelete(this)">Ištrinti</button>
-                                <button class="btn btn-warning">Pridėti į mėgstamus</button>
-                                <button class="btn btn-success">Įvertinti</button>
+                                @if(ad.megst)
+                                {
+                                    <a class="btn btn-secondary" asp-controller="Home" asp-action="RemoveAdFromFavourites" asp-route-AdId="@ad.id">Pašalinti iš mėgstamų</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-warning" asp-controller="Home" asp-action="AddAdToFavourites" asp-route-AdId="@ad.id">Pridėti į mėgstamus</a>
+                                }
+                            <button class="btn btn-success">Įvertinti</button>
                                 <script>
                                     function confirmDelete(button) {
                                         var adId = button.getAttribute('data-ad-id');

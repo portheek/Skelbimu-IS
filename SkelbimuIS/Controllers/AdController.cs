@@ -29,7 +29,7 @@ namespace SkelbimuIS.Controllers
 
         public IActionResult Index()
         {
-            List<Ad> ads = database.getAllAds();
+            List<Ad> ads = database.getAllAds(currentUser);
             return View();
         }
 
@@ -137,7 +137,7 @@ namespace SkelbimuIS.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            List<Ad> ads = database.getAllAds();
+            List<Ad> ads = database.getAllAds(currentUser);
             return View(ads);
         }
 

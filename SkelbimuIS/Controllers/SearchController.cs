@@ -31,12 +31,32 @@ namespace SkelbimuIS.Controllers
             SearchModel model = new SearchModel();
             model.query = query;
 
-            List<Ad> adList = database.getAllAds(query);
+            List<Ad> adList = database.getAllAds(currentUser, query);
             model.ads = adList;
 
             database.InsertSearchHistory(currentUser, model);
 
             return View(model);
+        }
+
+        public IActionResult AddAdToFavourites(int AdId, String query)
+        {
+            if (!database.CheckIfAdIsAddedToFavourites(currentUser, AdId))
+            {
+                database.AddAdToFavourites(currentUser, AdId);
+            }
+
+            return Redirect($"/Search/Index?query={query}");
+        }
+
+        public IActionResult RemoveAdFromFavourites(int AdId, string query)
+        {
+            if (database.CheckIfAdIsAddedToFavourites(currentUser, AdId))
+            {
+                database.RemoveAdFromFavourites(currentUser, AdId);
+            }
+
+            return Redirect($"/Search/Index?query={query}");
         }
     }
 }

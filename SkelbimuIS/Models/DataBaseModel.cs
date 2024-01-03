@@ -4,7 +4,7 @@ namespace SkelbimuIS.Models
 {
     public class DataBaseModel
     {
-        private readonly string connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=pma;Allow User Variables=true;";// "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;Allow User Variables=true";
+        private readonly string connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=skelbimai;Allow User Variables=true;";// "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;Allow User Variables=true";
         private MySqlConnection connection;
         private PasswordHashService passwordHash;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -17,7 +17,7 @@ namespace SkelbimuIS.Models
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public List<Ad> getAllAds(String searchQuery = null)
+        public List<Ad> getAllAds(User user, String searchQuery = null)
         {
             List<Ad> ads = new List<Ad>();
 
@@ -51,9 +51,18 @@ namespace SkelbimuIS.Models
                             pardavejoId = reader.GetInt32(12),
                             kategorija = reader.GetString(13)
                         };
+
+                        
+
                         ads.Add(ad);
                     }
                 }
+            }
+
+            foreach(Ad ad in ads)
+            {
+                bool isFavourite = CheckIfAdIsAddedToFavourites(user, ad.id);
+                ad.megst = isFavourite;
             }
             return ads;
         }
@@ -459,6 +468,61 @@ namespace SkelbimuIS.Models
                 }
             }
             return queries;
+        }
+
+        public bool CheckIfAdIsAddedToFavourites(User user, int id)
+        {
+            int userid = user.id;
+
+
+            string sqlQuery = "SELECT id FROM favourite_ads WHERE user = @userid AND ad = @adid";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@userid", userid);
+                command.Parameters.AddWithValue("@adid", id);
+                command.ExecuteNonQuery();
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public void AddAdToFavourites(User user, int id)
+        {
+            int userid = user.id;
+
+
+            string sqlQuery = "INSERT INTO favourite_ads (user, ad) " +
+                  "VALUES (@userid, @adid);";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@userid", userid);
+                command.Parameters.AddWithValue("@adid", id);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void RemoveAdFromFavourites(User user, int id)
+        {
+            int userid = user.id;
+
+
+            string sqlQuery = "DELETE FROM favourite_ads WHERE user = @userid AND ad = @adid";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@userid", userid);
+                command.Parameters.AddWithValue("@adid", id);
+                command.ExecuteNonQuery();
+            }
         }
     }
 }
