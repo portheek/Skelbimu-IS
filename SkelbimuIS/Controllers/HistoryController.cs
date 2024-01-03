@@ -26,9 +26,7 @@ namespace SkelbimuIS.Controllers
 
         public IActionResult Index()
         {
-            List<String> queries = database.GetUserSearchHistory(currentUser);
-            Console.WriteLine("Queries:");
-            Console.WriteLine(queries.Count);
+            List<SearchModel> queries = database.GetUserSearchHistory(currentUser);
             return View(queries);
         }
     }

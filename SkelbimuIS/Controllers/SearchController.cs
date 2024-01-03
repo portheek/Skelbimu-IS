@@ -33,6 +33,10 @@ namespace SkelbimuIS.Controllers
 
             List<Ad> adList = database.getAllAds(currentUser, query, priceFrom, priceTo, city, category);
             model.ads = adList;
+            model.priceFrom = priceFrom;
+            model.priceTo = priceTo;
+            model.city = city;
+            model.category = category;
 
             database.InsertSearchHistory(currentUser, model);
 

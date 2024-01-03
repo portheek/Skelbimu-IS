@@ -1,20 +1,38 @@
 ﻿<div class="container mt-5">
     <h1 class="mb-4">Paskutinės 10 paieškos užklausos:</h1>
-    <ul class="list-group">
-    @if (Model != null)
-    {
+    
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Paieška</th>
+          <th scope="col">Kaina nuo</th>
+          <th scope="col">Kaina iki</th>
+          <th scope="col">Miestas</th>
+          <th scope="col">Kategorija</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (Model != null)
+        {
 
-        if (Model.Count < 1)
-        {
-            <p>Istorija tuščia.</p>
-        }
-        else
-        {
-            @foreach (var query in Model)
+            if (Model.Count < 1)
             {
-                <li class="list-group-item">@query</li>
+                <p>Istorija tuščia.</p>
+            }
+            else
+            {
+                @foreach (var list in Model)
+                {
+                    <tr>
+                      <td>@list.query</td>
+                      <td>@list.priceFrom</td>
+                      <td>@list.priceTo</td>
+                      <td>@list.city</td>
+                      <td>@list.category</td>
+                    </tr>
+                }
             }
         }
-    }
-    </ul>
+       </tbody>
+    </table>
 </div>

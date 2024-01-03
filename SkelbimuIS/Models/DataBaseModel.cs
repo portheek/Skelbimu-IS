@@ -514,23 +514,27 @@ namespace SkelbimuIS.Models
                 return;
             }
 
-            string sqlQuery = "INSERT INTO search_history (user, query) " +
-                  "VALUES (@userid, @query);";
+            string sqlQuery = "INSERT INTO search_history (user, query, category, price_from, price_to, city) " +
+                  "VALUES (@userid, @query, @category, @priceFrom, @priceTo, @city);";
 
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
                 command.Parameters.AddWithValue("@userid", userid);
                 command.Parameters.AddWithValue("@query", query);
+                command.Parameters.AddWithValue("@category", model.category);
+                command.Parameters.AddWithValue("@priceFrom", model.priceFrom);
+                command.Parameters.AddWithValue("@priceTo", model.priceTo);
+                command.Parameters.AddWithValue("@city", model.city);
                 command.ExecuteNonQuery();
             }
         }
 
-        public List<String> GetUserSearchHistory(User user)
+        public List<SearchModel> GetUserSearchHistory(User user)
         {
-            List<String> queries = new List<String>();
+            List<SearchModel> queries = new List<SearchModel>();
             int userid = user.id;
             Console.WriteLine($"User id: {userid};");
-            string sqlQuery = "SELECT query FROM search_history WHERE user = @userid LIMIT 10";
+            string sqlQuery = "SELECT id, query, price_from, price_to, city, category FROM search_history WHERE user = @userid ORDER BY id DESC LIMIT 10 ";
 
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
             {
@@ -539,9 +543,13 @@ namespace SkelbimuIS.Models
                 {
                     while (reader.Read())
                     {
-                        String query = reader["query"].ToString();
-                        Console.WriteLine($"got query: {query};");
-                        queries.Add(query);
+                        SearchModel search = new SearchModel();
+                        search.query = reader["query"].ToString();
+                        search.priceFrom = reader["price_from"].ToString();
+                        search.priceTo = reader["price_to"].ToString();
+                        search.city = reader["city"].ToString();
+                        search.category = reader["category"].ToString();
+                        queries.Add(search);
                     }
                 }
             }
