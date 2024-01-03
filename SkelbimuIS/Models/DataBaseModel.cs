@@ -4,7 +4,7 @@ namespace SkelbimuIS.Models
 {
     public class DataBaseModel
     {
-        private readonly string connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=skelbimai;Allow User Variables=true;";// "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;Allow User Variables=true";
+        private readonly string connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=pma;Allow User Variables=true;";// "Server=localhost;Database=phpmyadmin;User ID=pma;Password=pmapass;Allow User Variables=true";
         private MySqlConnection connection;
         private PasswordHashService passwordHash;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -168,6 +168,16 @@ namespace SkelbimuIS.Models
                 command.Parameters.AddWithValue("@kategorija", kategorija);
                 command.Parameters.AddWithValue("@id", id);
 
+                command.ExecuteNonQuery();
+            }
+        }
+
+        internal void DeleteAd(int adId)
+        {
+            string sqlQuery = "DELETE FROM ad WHERE id=@id";
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@id", adId);
                 command.ExecuteNonQuery();
             }
         }
