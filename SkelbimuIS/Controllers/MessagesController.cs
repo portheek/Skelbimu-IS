@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
-using Microsoft.AspNetCore.Components.Web;
-using System.Data.Common;
 
 
 namespace SkelbimuIS.Controllers
@@ -62,9 +60,10 @@ namespace SkelbimuIS.Controllers
         }
 
         [HttpPost]
-        public IActionResult SendMessage(string toUsername, string topic, string message)
+        public IActionResult SendMessage(string? toUsername, string? topic, string? message)
         {
-            if(toUsername == "" || topic == "" || message == "")
+            if(toUsername == "" || topic == "" || message == "" || 
+            toUsername == null || topic == null || message == null)
             {
                 ViewBag.ErrorMessage = "Užpildti ne visi laukai!";
                 return View("NewMessage");

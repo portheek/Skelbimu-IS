@@ -36,7 +36,7 @@ namespace SkelbimuIS.Controllers
             }
 
             SetSessionUser(user);
-
+            ViewBag.SuccessMessage = "Prisijungta!";
             return View("Index");
         }
 
