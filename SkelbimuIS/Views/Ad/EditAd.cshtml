@@ -1,46 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skelbimo redagavimas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+@{
+    ViewBag.Title = "EditAd";
+}
 
-<body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Skelbimo redagavimas</h1>
-
-        <form>
-            <div class="mb-3">
-                <label for="adTitle" class="form-label">Skelbimo pavadinimas</label>
-                <input type="text" class="form-control" id="adTitle" value="" >
-            </div>
-            <div class="mb-3">
-                <label for="adDescription" class="form-label">Skelbimo aprašymas</label>
-                <textarea class="form-control" id="adDescription" rows="3"></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="category" class="form-label">Kategorija</label>
-                <select class="form-select" id="category" required>
-                    <option value="" disabled selected>Pasirinkite kategoriją</option>
-                    <option value="electronics">Įrenginiai</option>
-                    <option value="clothing">Rūbai</option>
-                    <option value="furniture">Baldai</option>
-                    <option value="books">Knygos</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="price" class="form-label">Kaina</label>
-                <input type="number" class="form-control" id="price" placeholder="Įvesti kainą" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Išsaugoti pakeitimus</button>
-        </form>
+@if (ViewBag.ErrorMessage != null && @ViewBag.ErrorMessage == "Jūs neprisijungęs!")
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
     </div>
+}
+else
+{
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @ViewBag.SuccessMessage
+        </div>
+    }
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Skelbimo redagavimas</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    @model SkelbimuIS.Models.Ad
+    <body>
+        <div class="container mt-5">
+            <h1 class="mb-4">Skelbimo redagavimas</h1>
+
+            <form asp-controller="Ad" asp-action="UpdateAd" method="post" class="needs-validation" novalidate="" autocomplete="off">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Skelbimo pavadinimas</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Įveskite skelbimo pavadinimą" value="@Model.pavadinimas" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Skelbimo aprašymas</label>
+                    <textarea class="form-control" id="description" name="description" rows="3"  placeholder="Skelbimo aprašymas"
+						      required>@Model.aprasas</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Telefono numeris</label>
+                    <input type="text" class="form-control" id="phone" name="phone" value="@Model.numeris" required>
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Kategorija</label>
+                    <select class="form-select" id="category" name="category" required>
+                        @{
+                            string electronicsSelected = Model.kategorija == "Įrenginiai" ? "selected" : "";
+                            string clothingSelected = Model.kategorija == "Rūbai" ? "selected" : "";
+                            string furnitureSelected = Model.kategorija == "Baldai" ? "selected" : "";
+                            string booksSelected = Model.kategorija == "Knygos" ? "selected" : "";
+                        }
+                        <option value="Įrenginiai" selected="@electronicsSelected">Įrenginiai</option>
+                        <option value="Rūbai" selected="@clothingSelected">Rūbai</option>
+                        <option value="Baldai" selected="@furnitureSelected">Baldai</option>
+                        <option value="Knygos" selected="@booksSelected">Knygos</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">Miestas</label>
+                    <select class="form-select" id="city" name="city" required>
+                        @{
+                            string vilniusSelected = Model.miestas == "Vilnius" ? "selected" : "";
+                            string kaunasSelected = Model.miestas == "Kaunas" ? "selected" : "";
+                            string klaipedaSelected = Model.miestas == "Klaipėda" ? "selected" : "";
+                            string ukmergeSelected = Model.miestas == "Ukmergė" ? "selected" : "";
+                        }
+                        <option value="" disabled>Pasirinkite miestą</option>
+                        <option value="Vilnius" selected="@vilniusSelected">Vilnius</option>
+                        <option value="Kaunas" selected="@kaunasSelected">Kaunas</option>
+                        <option value="Klaipėda" selected="@klaipedaSelected">Klaipėda</option>
+                        <option value="Ukmergė" selected="@ukmergeSelected">Ukmergė</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Kaina</label>
+                    <input type="number" class="form-control" id="price" name="price" placeholder="Įvesti kainą" value="@Model.kaina" required>
+                </div>
+                <input type="hidden" id="Adid" name="Adid" value="@Model.id">
+                <button type="submit" class="btn btn-primary">Redaguoti skelbimą</button>
+            </form>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+
+}
 
 </html>

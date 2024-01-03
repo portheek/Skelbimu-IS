@@ -139,6 +139,38 @@ namespace SkelbimuIS.Models
             }
         }
 
+        public void UpdateAd(Ad ad)
+        {
+            int id = ad.id;
+            string pavadinimas = ad.pavadinimas;
+            string numeris = ad.numeris;
+            string aprasas = ad.aprasas;
+            decimal kaina = ad.kaina;
+            string miestas = ad.miestas;
+            string kategorija = ad.kategorija;
+
+            string sqlQuery = @"UPDATE ad
+                        SET pavadinimas = @pavadinimas, 
+                            numeris = @numeris,  
+                            aprasas = @aprasas, 
+                            kaina = @kaina, 
+                            miestas = @miestas,   
+                            kategorija = @kategorija
+                        WHERE id = @id;";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@pavadinimas", pavadinimas);
+                command.Parameters.AddWithValue("@numeris", numeris);
+                command.Parameters.AddWithValue("@aprasas", aprasas);
+                command.Parameters.AddWithValue("@kaina", kaina);
+                command.Parameters.AddWithValue("@miestas", miestas);
+                command.Parameters.AddWithValue("@kategorija", kategorija);
+                command.Parameters.AddWithValue("@id", id);
+
+                command.ExecuteNonQuery();
+            }
+        }
 
         //not used
         public List<Message> getAllMessages()

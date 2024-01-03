@@ -19,6 +19,7 @@
     </div>
 
 
+
     @model List<SkelbimuIS.Models.Ad>
     <div class="container mt-5">
         <h1 class="mb-4">Visi skelbimai</h1>
@@ -37,6 +38,7 @@
                                 <p class="card-text"><strong>Kaina:</strong> @ad.kaina</p>
 
                                 <a class="btn btn-primary" asp-controller="Ad" asp-action="ViewAd" asp-route-AdId="@ad.id"> Atidaryti</a>
+                                <a class="btn btn-primary" asp-controller="Ad" asp-action="EditAd" asp-route-id="@ad.id"> Redaguoti</a>
                                 <button class="btn btn-danger">Ištrinti</button>
                                 <button class="btn btn-warning">Pridėti į mėgstamus</button>
                                 <button class="btn btn-success">Įvertinti</button>
