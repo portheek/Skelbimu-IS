@@ -17,6 +17,48 @@ namespace SkelbimuIS.Models
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public List<Ad> getAllSellersAds(int sellersId)
+        {
+            List<Ad> ads = new List<Ad>();
+
+            string sqlQuery = "SELECT * FROM ad WHERE pardId=@adId";
+
+
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@adId", sellersId);
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Ad ad = new Ad
+                        {
+                            id = reader.GetInt32(0),
+                            pavadinimas = reader.GetString(1),
+                            numeris = reader.GetString(2),
+                            pastas = reader.GetString(3),
+                            aprasas = reader.GetString(4),
+                            kaina = reader.GetDecimal(5),
+                            ivertis = reader.GetDecimal(6),
+                            reputacija = reader.GetDecimal(7),
+                            miestas = reader.GetString(8),
+                            perziuros = reader.GetInt32(9),
+                            data = reader.GetDateTime(10),
+                            megst = reader.GetBoolean(11),
+                            pardavejoId = reader.GetInt32(12),
+                            kategorija = reader.GetString(13)
+                        };
+
+
+
+                        ads.Add(ad);
+                    }
+                }
+            }
+            return ads;
+        }
+
         public List<Ad> getAllAds(User user, String searchQuery = null, String priceFrom = null, String priceTo = null, String city = null, String category = null)
         {
             List<Ad> ads = new List<Ad>();
@@ -188,6 +230,8 @@ namespace SkelbimuIS.Models
             decimal kaina = ad.kaina;
             string miestas = ad.miestas;
             string kategorija = ad.kategorija;
+            decimal ivertis = ad.ivertis;
+            decimal reputacija = ad.reputacija;
 
             string sqlQuery = @"UPDATE ad
                         SET pavadinimas = @pavadinimas, 
@@ -195,7 +239,9 @@ namespace SkelbimuIS.Models
                             aprasas = @aprasas, 
                             kaina = @kaina, 
                             miestas = @miestas,   
-                            kategorija = @kategorija
+                            kategorija = @kategorija,
+                            ivertis = @ivertis,
+                            reputacija = @reputacija
                         WHERE id = @id;";
 
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
@@ -206,6 +252,8 @@ namespace SkelbimuIS.Models
                 command.Parameters.AddWithValue("@kaina", kaina);
                 command.Parameters.AddWithValue("@miestas", miestas);
                 command.Parameters.AddWithValue("@kategorija", kategorija);
+                command.Parameters.AddWithValue("@ivertis", ivertis);
+                command.Parameters.AddWithValue("@reputacija", reputacija);
                 command.Parameters.AddWithValue("@id", id);
 
                 command.ExecuteNonQuery();
@@ -536,7 +584,7 @@ namespace SkelbimuIS.Models
 
             List<SearchModel> queries = new List<SearchModel>();
             int userid = user.id;
-            Console.WriteLine($"User id: {userid};");
+            //Console.WriteLine($"User id: {userid};");
             string sqlQuery = "SELECT id, query, price_from, price_to, city, category FROM search_history WHERE user = @userid ORDER BY id DESC LIMIT 10 ";
 
             using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))

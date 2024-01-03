@@ -95,7 +95,7 @@ namespace SkelbimuIS.Controllers
             {
                 Model.ivertis = 0;
             }
-
+            Model.reputacija = Reputation(Model.pardavejoId);
             return View("ViewAd", Model);
         }
 
@@ -126,12 +126,28 @@ namespace SkelbimuIS.Controllers
                 ivertis = score,
                 data = DateTime.Now
             };
-
+            scores.Add(s);
             database.addScore(s);
             ViewBag.SuccessMessage = "Ačiū už jusų įvertinimą!";
             Model.ivertis = ScoreAverage(scores);
             database.UpdateAd(Model);
             return ViewAd(AdId);
+        }
+
+        public decimal Reputation(int pardId)
+        {
+            decimal avg = 0;
+            List<Ad> ads = database.getAllSellersAds(pardId);
+            if (ads.Any())
+            {
+                foreach (Ad ad in ads)
+                {
+                    List<Score> scores = database.getAllScores(ad.id);
+                    avg = avg + ScoreAverage(scores);
+                }
+                avg = avg / ads.Count;
+            }
+            return avg;
         }
 
         public bool ScoreUser(List<Score> scores)
@@ -150,11 +166,14 @@ namespace SkelbimuIS.Controllers
         public decimal ScoreAverage(List<Score> scores)
         {
             decimal avg = 0;
-            foreach (Score score in scores)
+            if (scores.Count > 0)
             {
-                avg = avg + score.ivertis;
+                foreach (Score score in scores)
+                {
+                    avg = avg + score.ivertis;
+                }
+                avg = avg / scores.Count;
             }
-            avg = avg / scores.Count;
             return avg;
         }
 
@@ -190,7 +209,7 @@ namespace SkelbimuIS.Controllers
                 numeris = phone,
                 aprasas = description,
                 kaina = price,
-                ivertis = 0,
+                ivertis = ScoreAverage(database.getAllScores(Adid)),
                 reputacija = 0,
                 miestas = city,
                 perziuros = 0,
