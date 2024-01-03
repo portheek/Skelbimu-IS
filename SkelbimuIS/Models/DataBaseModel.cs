@@ -406,5 +406,49 @@ namespace SkelbimuIS.Models
             }
             return null;
         }
+
+        public void InsertSearchHistory(User user, SearchModel model)
+        {
+            int userid = user.id;
+            String query = model.query;
+
+            if(query == null)
+            {
+                return;
+            }
+
+            string sqlQuery = "INSERT INTO search_history (user, query) " +
+                  "VALUES (@userid, @query);";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@userid", userid);
+                command.Parameters.AddWithValue("@query", query);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public List<String> GetUserSearchHistory(User user)
+        {
+            List<String> queries = new List<String>();
+            int userid = user.id;
+            Console.WriteLine($"User id: {userid};");
+            string sqlQuery = "SELECT query FROM search_history WHERE user = @userid LIMIT 10";
+
+            using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@userid", userid);
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        String query = reader["query"].ToString();
+                        Console.WriteLine($"got query: {query};");
+                        queries.Add(query);
+                    }
+                }
+            }
+            return queries;
+        }
     }
 }

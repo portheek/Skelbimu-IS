@@ -1,0 +1,20 @@
+﻿<div class="container mt-5">
+    <h1 class="mb-4">Paskutinės 10 paieškos užklausos:</h1>
+    <ul class="list-group">
+    @if (Model != null)
+    {
+
+        if (Model.Count < 1)
+        {
+            <p>Istorija tuščia.</p>
+        }
+        else
+        {
+            @foreach (var query in Model)
+            {
+                <li class="list-group-item">@query</li>
+            }
+        }
+    }
+    </ul>
+</div>

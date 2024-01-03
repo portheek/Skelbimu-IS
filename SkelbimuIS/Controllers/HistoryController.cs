@@ -4,13 +4,13 @@ using System.Text.Json;
 
 namespace SkelbimuIS.Controllers
 {
-    public class SearchController : Controller
+    public class HistoryController : Controller
     {
-        private readonly ILogger<SearchController> _logger;
+        private readonly ILogger<HistoryController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly User currentUser;
         private DataBaseModel database;
-        public SearchController(ILogger<SearchController> logger, IHttpContextAccessor httpContextAccessor)
+        public HistoryController(ILogger<HistoryController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
@@ -24,19 +24,12 @@ namespace SkelbimuIS.Controllers
             else currentUser = JsonSerializer.Deserialize<User>(serializedUserObject);
         }
 
-
-
-        public IActionResult Index(String query)
+        public IActionResult Index()
         {
-            SearchModel model = new SearchModel();
-            model.query = query;
-
-            List<Ad> adList = database.getAllAds(query);
-            model.ads = adList;
-
-            database.InsertSearchHistory(currentUser, model);
-
-            return View(model);
+            List<String> queries = database.GetUserSearchHistory(currentUser);
+            Console.WriteLine("Queries:");
+            Console.WriteLine(queries.Count);
+            return View(queries);
         }
     }
 }

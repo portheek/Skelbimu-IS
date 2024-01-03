@@ -1,21 +1,15 @@
 ﻿
     <div class="mt-5">
         <form asp-controller="Search" asp-action="Index" method="get">
-            <div class="row">
-            
-                    <div class="col-md-10">
-                        <textarea class="form-control" id="searchbar" name="query" rows="1" placeholder="Paieška"></textarea>
-                    </div>
-
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-secondary btn-block" id="filter">Filtruoti</button>
-                    </div>
-
-                    <div class="col-md-1">
-                        <button type="submit" class="btn btn-secondary btn-block" id="search">Ieškoti</button>
-                    </div>
+            <div class="col-md-12">
+                <textarea class="form-control" id="searchbar" name="query" rows="1" placeholder="Paieška"></textarea>
             </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="search">Ieškoti</button>
+            <button type="button" class="btn btn-secondary btn-block" id="filter">Filtruoti</button>
+            <a class="btn btn-secondary" asp-controller="History" asp-action="Index">Istorija</a>
         </form>
+        
     </div>
 
 
