@@ -85,8 +85,77 @@ namespace SkelbimuIS.Controllers
 
         public IActionResult ViewAd(int AdId)
         {
+            List<Score> scores = database.getAllScores(AdId);
             Ad Model = database.getAdById(AdId);
+            if (scores.Count > 0)
+            {
+                Model.ivertis = ScoreAverage(scores);
+            }
+            else
+            {
+                Model.ivertis = 0;
+            }
+
             return View("ViewAd", Model);
+        }
+
+        [HttpPost]
+        public IActionResult AddScore(int AdId, decimal score)
+        {
+            List<Score> scores = database.getAllScores(AdId);
+            Ad Model = database.getAdById(AdId);
+            if (currentUser == null)
+            {
+                ViewBag.ErrorMessage = "Esate neprisijungias!";
+                return View("ViewAd", Model);
+            }
+            if (ScoreUser(scores))
+            {
+                ViewBag.ErrorMessage = "Jau esate įvertines šį skelbimą!";
+                return View("ViewAd", Model);
+            }
+            if (currentUser.id == Model.pardavejoId)
+            {
+                ViewBag.ErrorMessage = "Negalima vertinti savo skelbimo!";
+                return View("ViewAd", Model);
+            }
+            Score s = new Score
+            {
+                pardavejoId = currentUser.id,
+                skelbimoId = AdId,
+                ivertis = score,
+                data = DateTime.Now
+            };
+
+            database.addScore(s);
+            ViewBag.SuccessMessage = "Ačiū už jusų įvertinimą!";
+            Model.ivertis = ScoreAverage(scores);
+            database.UpdateAd(Model);
+            return ViewAd(AdId);
+        }
+
+        public bool ScoreUser(List<Score> scores)
+        {
+
+            foreach (Score score in scores)
+            {
+                if (score.pardavejoId == currentUser.id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public decimal ScoreAverage(List<Score> scores)
+        {
+            decimal avg = 0;
+            foreach (Score score in scores)
+            {
+                avg = avg + score.ivertis;
+            }
+            avg = avg / scores.Count;
+            return avg;
         }
 
         public IActionResult EditAd(int id)
