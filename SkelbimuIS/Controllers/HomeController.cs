@@ -30,6 +30,12 @@ namespace SkelbimuIS.Controllers
             return View();
         }
 
+        public IActionResult DeleteAd(int AdId)
+        {
+            database.DeleteAd(AdId);
+            return View("Index");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

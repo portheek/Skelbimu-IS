@@ -39,9 +39,36 @@
 
                                 <a class="btn btn-primary" asp-controller="Ad" asp-action="ViewAd" asp-route-AdId="@ad.id"> Atidaryti</a>
                                 <a class="btn btn-primary" asp-controller="Ad" asp-action="EditAd" asp-route-id="@ad.id"> Redaguoti</a>
-                                <button class="btn btn-danger">Ištrinti</button>
+                                <button class="btn btn-danger" data-ad-id="@ad.id" onclick="confirmDelete(this)">Ištrinti</button>
                                 <button class="btn btn-warning">Pridėti į mėgstamus</button>
                                 <button class="btn btn-success">Įvertinti</button>
+                                <script>
+                                    function confirmDelete(button) {
+                                        var adId = button.getAttribute('data-ad-id');
+
+                                        var result = confirm("Ar tikrai norite ištrinti šį skelbimą?");
+
+                                        if (result) {
+                                            deleteAd(adId);
+                                        }
+                                    }
+
+                                    function deleteAd(adId) {
+                                        $.ajax({
+                                            url: '/Home/DeleteAd',
+                                            type: 'POST',
+                                            data: { AdId: adId },
+                                            success: function (data) {
+                                                var result = confirm("Skelbimass sėkmingai ištrintas");
+                                                location.reload();
+                                            },
+                                            error: function (error) {
+                                                console.error('Error deleting ad:', error);
+                                                showMessage('Įvyko klaida trinant skelbimą.');
+                                            }
+                                        });
+                                    }
+                                </script>
                             </div>
                         </div>
                     }
