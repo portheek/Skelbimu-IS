@@ -554,6 +554,9 @@ namespace SkelbimuIS.Models
 
         public void InsertSearchHistory(User user, SearchModel model)
         {
+            if (user == null)
+                return;
+
             int userid = user.id;
             String query = model.query;
 
