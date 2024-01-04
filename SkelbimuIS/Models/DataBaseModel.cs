@@ -681,7 +681,12 @@ namespace SkelbimuIS.Models
                 {
                     while (reader.Read())
                     {
-                        return reader.GetString(0);
+                        if(!reader.IsDBNull(0))
+                        {
+                            return reader.GetString(0);
+                        }
+                        return null;
+                        
                     }
                 }
             }

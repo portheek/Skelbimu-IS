@@ -2,6 +2,7 @@
 using SkelbimuIS.Models;
 using System.Diagnostics;
 using System.Text.Json;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SkelbimuIS.Controllers
 {
@@ -44,6 +45,39 @@ namespace SkelbimuIS.Controllers
         public ActionResult Register()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Google()
+        {
+            JwtSecurityToken token = AuthModel.ConvertJwtStringToJwtSecurityToken(Request.Form["credential"]);
+            DecodedToken dToken = AuthModel.DecodeJwt(token);
+            foreach(var claim in dToken.claims)
+            {
+                Console.WriteLine(claim);
+            }
+
+            string id = dToken.claims[3].Value;
+            string email = dToken.claims[4].Value;
+            string name = dToken.claims[7].Value;
+
+            if (!database.userExists("email", email))
+            {
+                User newUser = new User
+                {
+                    username = name,
+                    password = id,
+                    email = email,
+                    role = "user"
+                };
+
+                database.addUser(newUser);
+            }
+
+            User user = database.getUser(email, id);
+            SetSessionUser(user);
+            ViewBag.SuccessMessage = "Prisijungta!";
+            return View("Index");
         }
 
         [HttpPost]

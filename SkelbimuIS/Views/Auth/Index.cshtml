@@ -47,14 +47,31 @@
 					</div>
 					<div class="row mt-3">
 						<div class="col text-center">
-							<button type="submit" class="btn btn-outline-success ms-auto">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google" viewBox="0 0 16 16">
-									<path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"/>
-								</svg>
-								Prisijungti naudojant Google
-							</button>
-						</div>
+
+							<script src="https://accounts.google.com/gsi/client" async defer></script>
+							<div id="g_id_onload"
+							 data-client_id="1005860306155-de43073q7sme8pu9n3pvpgs9u0vehrle.apps.googleusercontent.com"
+							 data-ux_mode="redirect"
+							 data-login_uri="https://localhost:7117/Auth/Google">
+							</div>
+							<div class="g_id_signin" data-type="standard"></div>
+
+							
+							</div>
 					</div>
+
+					<script>
+						
+					function onSignIn(googleUser) {
+					  var profile = googleUser.getBasicProfile();
+					  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+					  console.log('Name: ' + profile.getName());
+					  console.log('Image URL: ' + profile.getImageUrl());
+					  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+					}
+
+						
+					</script>
 
 
 					
